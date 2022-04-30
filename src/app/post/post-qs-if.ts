@@ -22,5 +22,6 @@ export class PostDTO {
 }
 
 export interface IPostQS {
-    getAllPosts(count: number, lastPostId: string): Promise<PostDTO[]>
+    getPostsAll(count: number, lastPostId: string | null): Promise<PostDTO[]>
+    getPostsUserAll(userId: string, count: number, lastPostId: string | null): Promise<PostDTO[]>
 }

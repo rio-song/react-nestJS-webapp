@@ -1,7 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger'
 import { PostDTO } from 'src/app/post/post-qs-if'
 
-export class GetAllPostsResponse {
+export class GetPostsAllResponse {
     @ApiProperty({ type: () => [Post] })
     Post: Post[]
 

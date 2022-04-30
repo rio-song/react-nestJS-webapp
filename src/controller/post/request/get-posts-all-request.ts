@@ -3,12 +3,11 @@
 import { ApiProperty } from '@nestjs/swagger'
 import { IsNotEmpty } from 'class-validator'
 
-export class GetAllPostsRequest {
+export class GetPostsAllRequest {
     @ApiProperty()
     @IsNotEmpty()
     readonly count!: number
 
     @ApiProperty()
-    @IsNotEmpty()
-    readonly lastPostId!: string
+    readonly lastPostId!: string | null
 }
