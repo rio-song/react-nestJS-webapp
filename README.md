@@ -71,3 +71,65 @@ Nest is an MIT-licensed open source project. It can grow thanks to the sponsors 
 ## License
 
   Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+
+# API
+
+- 全ユーザーの投稿の全量の取得
+get /api/post<br><br>
+
+requestBody:count(取得したい数)/lastPostId(指定したいカーソル)<br>
+responseBody:id/imageUrl/title/posted_at/Favos数/Comments数/lastPostId(指定したいカーソル)<br>
+
+- あるユーザーの投稿の全量の取得
+get /api/post/{userId}<br><br>
+
+requestBody:none<br>
+responseBody:id/imageUrl/title/posted_at/Favos数/Comments数<br>
+
+
+- 投稿の詳細の取得
+get /api/post/{postId}<br><br>
+
+requestBody:none<br>
+responseBody:id/imageUrl/title/text/posted_at/Favos数/Comments数/Commentのリスト/Commentした人<br>
+
+- 投稿
+post /api/post/{userId}<br><br>
+
+requestBody:imageUrl/title/text<br>
+responseBody:none<br>
+
+- 投稿の削除
+delete /api/post/{postId}/{userId}<br><br>
+requestBody:none<br>
+responseBody:none<br>
+
+- 投稿の編集
+put /api/post/{postId}/{userId}<br><br>
+requestBody:imageUrl/title/text<br>
+responseBody:none<br>
+
+- いいねの登録
+post /api/favo/{postId}/{userId}<br><br>
+requestBody:none<br>
+responseBody:none<br>
+
+- いいねの削除
+delete /api/favo/{postId}/{userId}<br><br>
+requestBody:none<br>
+responseBody:none<br>
+
+- コメントの登録
+post /api/comment/{postId}/{userId}<br><br>
+requestBody:comment<br>
+responseBody:none<br>
+
+- コメントの削除
+delete /api/comment/{postId}/{userId}<br><br>
+requestBody:none<br>
+responseBody:none<br>
+
+- コメントの編集
+put /api/comment/{postId}/{userId}<br><br>
+requestBody:comment<br>
+responseBody:none<br>
