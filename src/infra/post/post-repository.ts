@@ -1,283 +1,118 @@
 import { PrismaClient } from '@prisma/client'
-import { ITeamRepository } from 'src/domain/repository-interface/team-repository'
-import { Team, TeamNameVO } from 'src/domain/entity/team'
+import { Post } from 'src/domain/entity/post'
+import { IPostRepository } from 'src/domain/repository-interface/post-repository'
 import { createRandomIdString } from 'src/util/random'
-import { Pair, PairNameVO } from 'src/domain/entity/pair'
 
-export class PostRepository implements ITeamRepository {
+export class PostRepository implements IPostRepository {
     private prismaClient: PrismaClient
     public constructor(prismaClient: PrismaClient) {
         this.prismaClient = prismaClient
     }
 
-    //チームとペアの生成//初回のみ呼ばれる前提。
-    //prismaのアクセスをcreateのネストにしたかったが、TeamEntityからpair以下取り出すと型不一致になってしまうため個別でDBアクセス。
+    public async save(postEntity: Post): Promise<Post> {
+        const { id, imageUrl, title, text, postedAt, postedUser } = postEntity.getAllProperties()
 
-    public async createTeamPair(teamEntity: Team): Promise<Team[]> {
-        const { id, teamName, pairs } = teamEntity.getAllProperties()
-
-        await this.prismaClient.$transaction(async (prismaClient) => {
-
-            const savedTeamDatamodel = await this.prismaClient.team.create({
-                data: {
-                    id: id,
-                    teamName: teamName.getTeamNameVO(),
-                }
-            })
-
-            const savedPairDatamodel = await this.prismaClient.pair.create({
-                data: {
-                    id: pairs.shift()?.getPairId() || "",
-                    pairName: pairs.shift()?.getPairName().getPairNameVO() || "",
-                },
-            })
-
-            const savedPairBelongTeam = await this.prismaClient.pairBelongTeam.create({
-                data: {
-                    id: createRandomIdString(),
-                    teamId: savedTeamDatamodel.id,
-                    pairId: savedPairDatamodel.id,
-                },
-            })
-        })
-        return this.getTeamEntity();
-    }
-
-    //3人以下のペアを探す。
-    public async getSmallestPair(): Promise<Team | null> {
-        const smallestPair = await this.prismaClient.pair.findFirst({
-            include: {
-                pairBelongMember: {
-                    orderBy: {
-                        userId: "asc"
-                    }
-                }
-            }
-        })
-        if (smallestPair != null) {
-            const getTeambyPairId = await this.prismaClient.pairBelongTeam.findFirst({
-                where: {
-                    pairId: smallestPair?.id
-                }, include: {
-                    team: true
-                }
-            })
-            if (getTeambyPairId != null) {
-                const getTeamEntity =
-                    new Team({
-                        id: getTeambyPairId?.teamId,
-                        teamName: new TeamNameVO(getTeambyPairId?.team.teamName),
-                        pairs: [new Pair({
-                            id: smallestPair.id,
-                            pairName: new PairNameVO(smallestPair.pairName),
-                            users: smallestPair.pairBelongMember.map((u) => u.userId)
-                        }),]
-                    })
-                return getTeamEntity
-            }
-        } else {
-            return null
-        }
-        return null
-    }
-
-    public async joinPair(teamEntity: Team): Promise<Team[]> {
-        const { pairs } = teamEntity.getAllProperties()
-        const savedTeamDatamodel1 = await this.prismaClient.pairBelongMember.create({
+        await this.prismaClient.post.create({
             data: {
-                id: createRandomIdString(),
-                userId: pairs[0]?.getUsers()[0] || "",
-                pairId: pairs[0]?.getPairId() || ""
-            }
-        })
-
-        //不要かと。
-        return this.getTeamEntity()
-    }
-
-
-    public async createPair(teamId: string, pairName: string): Promise<{ id: string, pairName: string }> {
-
-        const savedPairDatamodel = await this.prismaClient.pair.create({
-            data: {
-                id: createRandomIdString(),
-                pairName: pairName,
-                pairBelongTeam: {
+                id: id,
+                image_url: imageUrl,
+                title: title,
+                text: text,
+                posted_at: postedAt,
+                updated_at: new Date(),
+                created_at: new Date(),
+                posted_user: {
                     create: {
                         id: createRandomIdString(),
-                        teamId: teamId
+                        user_id: postedUser,
+                        updated_at: new Date(),
+                        created_at: new Date()
                     }
                 }
-            },
+            }
         })
-        return { id: savedPairDatamodel.id, pairName: savedPairDatamodel.pairName }
+        return postEntity;
     }
 
+    public async getPost(postId: string): Promise<Post> {
 
-    public async getTeamId(): Promise<{ id: string, teamName: number } | null> {
-
-        const savedPairDatamodel = await this.prismaClient.team.findFirst()
-        if (savedPairDatamodel != null) {
-            return { id: savedPairDatamodel.id, teamName: savedPairDatamodel.teamName }
-        } else {
-            return null
-        }
-    }
-
-    public async deletePairMember(userId: string): Promise<Team[]> {
-        await this.prismaClient.pairBelongMember.deleteMany({
+        const post = await this.prismaClient.post.findUnique({
             where: {
-                userId: userId
-            },
-        })
-        return this.getTeamEntity()
-    }
-
-
-    public async deletePair(pairId: string): Promise<Team[]> {
-        await this.prismaClient.pair.deleteMany({
-            where: {
-                id: pairId
-            },
-        })
-        return this.getTeamEntity()
-    }
-
-    public async getTeamPairbyTeamName(teamName: number, pairName: string[]): Promise<Team[]> {
-        const beforreallTeamsDatamodel = await this.prismaClient.team.findFirst({
-            where: {
-                teamName: teamName
+                id: postId
             },
             include: {
-                pairBelongTeam: {
-                    include: {
-                        pair: {
-                            include: {
-                                pairBelongMember: true
-                            }
-                        }
-                    }
-                },
-            },
+                posted_user: true
+            }
+        })
+        const postEntity = new Post({
+            id: post.id,
+            imageUrl: post.image_url,
+            title: post.title,
+            text: post.text,
+            postedAt: post.posted_at,
+            postedUser: post.posted_user.slice()[0].id,
+            createAt: post.created_at,
         })
 
-        if (beforreallTeamsDatamodel === null) {
-            throw new Error("チーム名が存在しません");
-        }
+        return postEntity;
+    }
+
+    public async update(postEntity: Post): Promise<Post> {
+
+        const { id, imageUrl, title, text, postedAt, postedUser, createAt } = postEntity.getAllProperties()
 
         await this.prismaClient.$transaction(async (prismaClient) => {
-            const deletePairDatamodel = await this.prismaClient.pairBelongTeam.deleteMany({
+
+            await this.prismaClient.post.delete({
                 where: {
-                    teamId: beforreallTeamsDatamodel.id
+                    id: id
                 },
             })
-
-            for (let i = 0; i < pairName.length; i++) {
-                const savedPairDatamodel = await this.prismaClient.pairBelongTeam.create({
-                    data: {
-                        id: createRandomIdString(),
-                        pairId: pairName[i] || "",
-                        teamId: beforreallTeamsDatamodel.id,
+            await this.prismaClient.postedUser.deleteMany({
+                where: {
+                    post_id: id,
+                    user_id: postedUser
+                },
+            })
+            await this.prismaClient.post.create({
+                data: {
+                    id: id,
+                    image_url: imageUrl,
+                    title: title,
+                    text: text,
+                    posted_at: postedAt,
+                    updated_at: new Date(),
+                    created_at: createAt,
+                    posted_user: {
+                        create: {
+                            id: createRandomIdString(),
+                            user_id: postedUser,
+                            updated_at: new Date(),
+                            created_at: new Date()
+                        }
                     }
-                })
-            }
+                }
+            })
         })
-        return this.getTeamEntity()
+        return postEntity;
     }
 
-    public async updatePairMember(pairName: string, memberEmails: string[]): Promise<Team[]> {
-        const beforreallpairDatamodel = await this.prismaClient.pair.findFirst({
-            where: {
-                pairName: pairName
-            },
-            include: {
-                pairBelongMember: true
-            }
-        })
+    public async delete(postId: string, userId: string): Promise<boolean> {
 
-        if (beforreallpairDatamodel === null) {
-            throw new Error("ペア名が存在しません");
-        }
         await this.prismaClient.$transaction(async (prismaClient) => {
-            const deletePairDatamodel = await this.prismaClient.pairBelongMember.deleteMany({
+
+            await this.prismaClient.post.delete({
                 where: {
-                    pairId: beforreallpairDatamodel.id
+                    id: postId
                 },
             })
-
-            for (let i = 0; i < memberEmails.length; i++) {
-                const savedPairDatamodel = await this.prismaClient.pairBelongTeam.create({
-                    data: {
-                        id: createRandomIdString(),
-                        pairId: memberEmails[i] || "",
-                        teamId: beforreallpairDatamodel.id,
-                    }
-                })
-            }
-        })
-        return this.getTeamEntity()
-    }
-
-    public async getTeamPairbyUserId(userId: string): Promise<Team> {
-        const allTeamsDatamodel = await this.prismaClient.team.findFirst({
-            include: {
-                pairBelongTeam: {
-                    include: {
-                        pair: {
-                            include: {
-                                pairBelongMember: {
-                                    where: {
-                                        userId: userId
-                                    }
-                                }
-                            }
-                        }
-                    }
+            await this.prismaClient.postedUser.deleteMany({
+                where: {
+                    post_id: postId,
+                    user_id: userId
                 },
-            },
-        })
-        if (allTeamsDatamodel != null) {
-            const getTeamEntity = new Team({
-                id: allTeamsDatamodel.id,
-                teamName: new TeamNameVO(allTeamsDatamodel.teamName),
-                pairs: allTeamsDatamodel.pairBelongTeam.map((p) => new Pair({
-                    id: p.pair.id,
-                    pairName: new PairNameVO(p.pair.pairName),
-                    users: [userId]
-                })),
             })
-            return getTeamEntity;
-        } else {
-            throw new Error("チーム・ペアに所属していないユーザーです。")
-        }
-    }
-
-    public async getTeamEntity(): Promise<Team[]> {
-        const allTeamsDatamodel = await this.prismaClient.team.findMany({
-            include: {
-                pairBelongTeam: {
-                    include: {
-                        pair: {
-                            include: {
-                                pairBelongMember: true
-                            }
-                        }
-                    }
-                },
-            },
         })
-        const getTeamEntity = allTeamsDatamodel.map(
-            (teamDM) =>
-                new Team({
-                    id: teamDM.id,
-                    teamName: new TeamNameVO(teamDM.teamName),
-                    pairs: teamDM.pairBelongTeam.map((p) => new Pair({
-                        id: p.pair.id,
-                        pairName: new PairNameVO(p.pair.pairName),
-                        users: p.pair.pairBelongMember.map((u) => u.userId)
-                    })),
-                }))
-        return getTeamEntity;
+        return true;
     }
-
 }

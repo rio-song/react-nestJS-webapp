@@ -4,15 +4,19 @@ export class Post {
     private imageUrl: string
     private title: string
     private text: string
-    private posted_at: Date
+    private postedAt: Date
+    private postedUser: string
+    private createAt: Date | null
 
-    public constructor(props: { id: string; imageUrl: string; title: string; text: string; posted_at: Date; }) {
-        const { id, imageUrl, title, text, posted_at } = props
+    public constructor(props: { id: string; imageUrl: string; title: string; text: string; postedAt: Date; postedUser: string; createAt: Date | null }) {
+        const { id, imageUrl, title, text, postedAt, postedUser, createAt } = props
         this.id = id
         this.imageUrl = imageUrl
         this.title = title
         this.text = text
-        this.posted_at = posted_at
+        this.postedAt = postedAt
+        this.postedUser = postedUser
+        this.createAt = createAt
     }
 
     public getAllProperties() {
@@ -21,12 +25,14 @@ export class Post {
             imageUrl: this.imageUrl,
             title: this.title,
             text: this.text,
-            posted_at: this.posted_at,
+            postedAt: this.postedAt,
+            postedUser: this.postedUser,
+            createAt: this.createAt
         }
     }
 
-    public getLessonId() {
-        return this.id
+    public getCreateAt() {
+        return this.createAt
     }
 
 }

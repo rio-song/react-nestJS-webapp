@@ -1,16 +1,18 @@
-import { Body, Controller, Get, Post, Put, Param, Request } from '@nestjs/common'
+import { Body, Controller, Get, Post, Put, Param, Request, Delete } from '@nestjs/common'
 import { PrismaClient } from '@prisma/client'
 import { GetPostsAllRequest } from './request/get-posts-all-request'
-import { PutUserRequest } from './request/put-user-request'
 import { GetPostsAllResponse } from './response/get-posts-all-response'
+import { GetPostDetailResponse } from './response/get-post-detail-response'
 import { GetPostsAllUseCase } from 'src/app/post/usecase/get-posts-all-usecase'
 import { GetPostsUserAllUseCase } from 'src/app/post/usecase/get-posts-user-all-usecase'
-// import { PostUserUseCase } from '../app/user-usecase/post-user-usecase'
-// import { PutUserUseCase } from '../app/user-usecase/put-user-usecase'
-// import { UserRepository } from 'src/infra/db/repository/user-repository'
-// import { TeamRepository } from 'src/infra/db/repository/team-repository'
+import { GetPostDetailUseCase } from 'src/app/post/usecase/get-post-detail-usecase'
 import { PostQS } from 'src/infra/post/post-qs'
-
+import { PostDetailQS } from 'src/infra/post/post-detail-qs'
+import { PostPutUserRequest } from './request/post-put-post-request'
+import { PostPostUseCase } from 'src/app/post/usecase/post-post-usecase'
+import { PutPostUseCase } from 'src/app/post/usecase/put-post-usecase'
+import { DeletePostUseCase } from 'src/app/post/usecase/delete-post-usecase'
+import { PostRepository } from 'src/infra/post/post-repository'
 
 @Controller({
     path: 'api/post',
@@ -42,41 +44,65 @@ export class PostController {
         return response
     }
 
+    @Get(':postId')
+    async getPostDetail(@Param() param): Promise<GetPostDetailResponse> {
+        const prisma = new PrismaClient()
+        const qs = new PostDetailQS(prisma)
+        const usecase = new GetPostDetailUseCase(qs)
+        const result = await usecase.do({
+            postId: param.postId
+        })
+        const response = new GetPostDetailResponse({ PostDetail: result })
+        return response
+    }
 
 
-    // @Post()
-    // async postUser(
-    //     @Param() userId: string,
-    //     @Body() postUserDto: PostUserRequest,
-    // ): Promise<void> {
-    //     const userId2 = request.params[userId]
-    //     const prisma = new PrismaClient()
-    //     const userRepo = new UserRepository(prisma)
-    //     const teamRepo = new TeamRepository(prisma)
-    //     const usecase = new PostUserUseCase(userRepo, teamRepo)
-    //     await usecase.do({
-    //         lastName: postUserDto.lastName,
-    //         firstName: postUserDto.firstName,
-    //         email: postUserDto.email,
-    //         userStatus: postUserDto.userStatus,
-    //     })
-    // }
+    @Post(':userId')
+    async postUser(
+        @Param() userId: string,
+        @Body() postUserDto: PostPutUserRequest,
+    ): Promise<void> {
+        const prisma = new PrismaClient()
+        const postRepo = new PostRepository(prisma)
+        const usecase = new PostPostUseCase(postRepo)
+        await usecase.do({
+            userId: userId,
+            imageUrl: postUserDto.imageUrl,
+            title: postUserDto.title,
+            text: postUserDto.text,
+        })
+    }
 
-    // @Put()
-    // async putUser(
-    //     @Body() putUserDto: PutUserRequest,
-    // ): Promise<void> {
-    //     const prisma = new PrismaClient()
-    //     const repoUser = new UserRepository(prisma)
-    //     const teamRepo = new TeamRepository(prisma)
-    //     const userQS = new UserQS(prisma)
-    //     const usecase = new PutUserUseCase(userQS, repoUser, teamRepo)
-    //     await usecase.do({
-    //         lastName: putUserDto.lastName,
-    //         firstName: putUserDto.firstName,
-    //         email: putUserDto.email,
-    //         userStatus: putUserDto.userStatus,
-    //     })
-    // }
+    @Put(':userId/:postId')
+    async putUser(
+        @Param('userId') userId: string,
+        @Param('postId') postId: string,
+        @Body() putUserDto: PostPutUserRequest,
+    ): Promise<void> {
+        const prisma = new PrismaClient()
+        const postRepo = new PostRepository(prisma)
+        const usecase = new PutPostUseCase(postRepo)
+        await usecase.do({
+            userId: userId,
+            postId: postId,
+            imageUrl: putUserDto.imageUrl,
+            title: putUserDto.title,
+            text: putUserDto.text,
+        })
+    }
 
+
+    @Delete(':userId/:postId')
+    async deletePost(
+        @Param('userId') userId: string,
+        @Param('postId') postId: string,
+    ): Promise<void> {
+        const prisma = new PrismaClient()
+        const postRepo = new PostRepository(prisma)
+        const usecase = new DeletePostUseCase(postRepo)
+        await usecase.do({
+            userId: userId,
+            postId: postId
+        })
+    }
 }
