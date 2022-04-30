@@ -125,11 +125,11 @@ requestBody:comment<br>
 responseBody:none<br>
 
 - コメントの削除
-delete /api/comment/{postId}/{userId}<br><br>
+delete /api/comment/{postId}/{userId}/{commentId}<br><br>
 requestBody:none<br>
 responseBody:none<br>
 
 - コメントの編集
-put /api/comment/{postId}/{userId}<br><br>
+put /api/comment/{postId}/{userId}/{commentId}<br><br>
 requestBody:comment<br>
 responseBody:none<br>

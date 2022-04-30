@@ -1,31 +1,34 @@
 
 export class Comment {
     private id: string
-    private userId: string
+    private commentedUserId: string
     private postId: string
     private comment: string
-    private commented_at: Date
+    private commentedAt: Date
+    private createAt: Date
 
-    public constructor(props: { id: string; userId: string; postId: string; comment: string; commented_at: Date; }) {
-        const { id, userId, postId, comment, commented_at } = props
+    public constructor(props: { id: string; commentedUserId: string; postId: string; comment: string; commentedAt: Date; createAt: Date; }) {
+        const { id, commentedUserId, postId, comment, commentedAt, createAt } = props
         this.id = id
-        this.userId = userId
+        this.commentedUserId = commentedUserId
         this.postId = postId
         this.comment = comment
-        this.commented_at = commented_at
+        this.commentedAt = commentedAt
+        this.createAt = createAt
     }
 
     public getAllProperties() {
         return {
             id: this.id,
-            userId: this.userId,
+            commentedUserId: this.commentedUserId,
             postId: this.postId,
             comment: this.comment,
-            commented_at: this.commented_at,
+            commentedAt: this.commentedAt,
+            createAt: this.createAt
         }
     }
-    public getLessonId() {
-        return this.id
+    public getCreateAt() {
+        return this.createAt
     }
 
 }
