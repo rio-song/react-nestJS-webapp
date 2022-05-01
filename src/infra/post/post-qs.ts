@@ -15,6 +15,9 @@ export class PostQS implements IPostQS {
             const allPosts = await this.prismaClient.post.findMany({
                 take: count,
                 skip: 1,
+                cursor: {
+                    id: lastPostId
+                },
                 orderBy: {
                     posted_at: 'desc',
                 },
@@ -22,6 +25,7 @@ export class PostQS implements IPostQS {
                     _count: {
                         select: { favos: true, comments: true },
                     }
+
                 }
             })
             return allPosts.map(
@@ -41,9 +45,6 @@ export class PostQS implements IPostQS {
             const allPosts = await this.prismaClient.post.findMany({
                 take: count,
                 skip: 1,
-                cursor: {
-                    id: lastPostId
-                },
                 orderBy: {
                     posted_at: 'desc',
                 },
@@ -51,7 +52,6 @@ export class PostQS implements IPostQS {
                     _count: {
                         select: { favos: true, comments: true },
                     }
-
                 }
             })
             return allPosts.map(
@@ -75,6 +75,9 @@ export class PostQS implements IPostQS {
             const allPosts = await this.prismaClient.post.findMany({
                 take: count,
                 skip: 1,
+                cursor: {
+                    id: lastPostId
+                },
                 orderBy: {
                     posted_at: 'desc',
                 },
@@ -106,9 +109,6 @@ export class PostQS implements IPostQS {
             const allPosts = await this.prismaClient.post.findMany({
                 take: count,
                 skip: 1,
-                cursor: {
-                    id: lastPostId
-                },
                 orderBy: {
                     posted_at: 'desc',
                 },
@@ -138,18 +138,4 @@ export class PostQS implements IPostQS {
             )
         }
     }
-
-
-    // public async getUser(email: string): Promise<UserDTO> {
-    //     const user = await this.prismaClient.user.findFirst({
-    //         where: {
-    //             email: email
-    //         },
-    //     })
-
-    //     if (user === null) {
-    //         throw new Error("存在しないユーザーです")
-    //     }
-    //     return new UserDTO(user)
-    // }
 }
