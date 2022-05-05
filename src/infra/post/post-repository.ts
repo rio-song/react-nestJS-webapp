@@ -11,7 +11,6 @@ export class PostRepository implements IPostRepository {
 
     public async save(postEntity: Post): Promise<Post> {
         const { id, imageUrl, title, text, postedAt, postedUser } = postEntity.getAllProperties()
-
         await this.prismaClient.post.create({
             data: {
                 id: id,

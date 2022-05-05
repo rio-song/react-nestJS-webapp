@@ -23,7 +23,7 @@ export class PostPostUseCase {
             title,
             text,
             postedAt: new Date(),
-            postedUser: userId,
+            postedUser: String(Object.values(userId)),
             createAt: null
         })
         await this.postRepo.save(postEntity);

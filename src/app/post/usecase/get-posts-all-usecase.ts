@@ -1,8 +1,8 @@
-import { PostQS } from "src/infra/post/post-qs"
+import { IPostQS } from '../post-qs-if'
 
 export class GetPostsAllUseCase {
-    private readonly postQS: PostQS
-    public constructor(postQS: PostQS) {
+    private readonly postQS: IPostQS
+    public constructor(postQS: IPostQS) {
         this.postQS = postQS
     }
     public async do(params: { count: number, lastPostId: string | null }) {
@@ -10,7 +10,6 @@ export class GetPostsAllUseCase {
             count,
             lastPostId,
         } = params
-
         try {
             return await this.postQS.getPostsAll(count, lastPostId)
         } catch (error) {

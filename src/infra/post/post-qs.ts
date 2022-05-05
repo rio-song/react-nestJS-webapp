@@ -44,7 +44,6 @@ export class PostQS implements IPostQS {
         } else {
             const allPosts = await this.prismaClient.post.findMany({
                 take: count,
-                skip: 1,
                 orderBy: {
                     posted_at: 'desc',
                 },
@@ -73,7 +72,7 @@ export class PostQS implements IPostQS {
     public async getPostsUserAll(userId: string, count: number, lastPostId: string | null): Promise<PostDTO[]> {
         if (lastPostId != null) {
             const allPosts = await this.prismaClient.post.findMany({
-                take: count,
+                take: Number(count),
                 skip: 1,
                 cursor: {
                     id: lastPostId
@@ -107,8 +106,7 @@ export class PostQS implements IPostQS {
             )
         } else {
             const allPosts = await this.prismaClient.post.findMany({
-                take: count,
-                skip: 1,
+                take: Number(count),
                 orderBy: {
                     posted_at: 'desc',
                 },
