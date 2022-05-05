@@ -30,7 +30,7 @@ export class PostController {
         const response = new GetPostsAllResponse({ Posts: result })
         return response
     }
-    @Get(':userId')
+    @Get('/userId/:userId')
     async getUserAllPosts(@Body() getAllPostsDto: GetPostsAllRequest, @Param() param): Promise<GetPostsAllResponse> {
         const prisma = new PrismaClient()
         const qs = new PostQS(prisma)
@@ -44,7 +44,7 @@ export class PostController {
         return response
     }
 
-    @Get(':postId')
+    @Get('/postId/:postId')
     async getPostDetail(@Param() param): Promise<GetPostDetailResponse> {
         const prisma = new PrismaClient()
         const qs = new PostDetailQS(prisma)
@@ -52,12 +52,12 @@ export class PostController {
         const result = await usecase.do({
             postId: param.postId
         })
-        const response = new GetPostDetailResponse({ PostDetail: result })
+        const response = new GetPostDetailResponse({ PostDetails: result })
         return response
     }
 
 
-    @Post(':userId')
+    @Post('/userId/:userId')
     async postUser(
         @Param() userId: string,
         @Body() postUserDto: PostPutUserRequest,
@@ -73,7 +73,7 @@ export class PostController {
         })
     }
 
-    @Put(':userId/:postId')
+    @Put('/userId/:userId/postId/:postId')
     async putUser(
         @Param('userId') userId: string,
         @Param('postId') postId: string,
@@ -92,7 +92,7 @@ export class PostController {
     }
 
 
-    @Delete(':userId/:postId')
+    @Delete('/userId/:userId/postId/:postId')
     async deletePost(
         @Param('userId') userId: string,
         @Param('postId') postId: string,
