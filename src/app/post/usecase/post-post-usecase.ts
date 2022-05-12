@@ -1,6 +1,7 @@
 import { Post } from 'src/domain/entity/post'
 import { createRandomIdString } from 'src/util/random'
 import { IPostRepository } from 'src/domain/repository-interface/post-repository'
+import { DomainService } from 'src/domain/domain-service/domain-service'
 
 export class PostPostUseCase {
     private readonly postRepo: IPostRepository
@@ -9,14 +10,15 @@ export class PostPostUseCase {
         this.postRepo = postRepo
     }
 
-    public async do(params: { userId: string, imageUrl: string, title: string, text: string, }) {
+    public async do(params: { token: string, userId: string, imageUrl: string, title: string, text: string, }) {
         const {
+            token,
             userId,
             imageUrl,
             title,
             text,
         } = params
-
+        await new DomainService().tokenCheck(token);
         const postEntity = new Post({
             id: createRandomIdString(),
             imageUrl,

@@ -1,6 +1,7 @@
 import { createRandomIdString } from 'src/util/random'
 import { Comment } from "src/domain/entity/comment"
 import { ICommentRepository } from "src/domain/repository-interface/comment-repository"
+import { DomainService } from 'src/domain/domain-service/domain-service'
 
 export class PostCommentUseCase {
     private readonly commentRepo: ICommentRepository
@@ -9,12 +10,15 @@ export class PostCommentUseCase {
         this.commentRepo = commentRepo
     }
 
-    public async do(params: { userId: string, postId: string, comment: string, }) {
+    public async do(params: { token: string, userId: string, postId: string, comment: string, }) {
         const {
+            token,
             userId,
             postId,
             comment,
         } = params
+
+        await new DomainService().tokenCheck(token);
 
         const commentEntity = new Comment({
             id: createRandomIdString(),

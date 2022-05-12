@@ -11,13 +11,15 @@ export class PutUserUseCase {
     }
 
     public async do(params: {
+        token: string,
         userId: string;
         firstName: string; familyName: string;
         nickName: string; imageUrl: string; email: string;
         password: string;
     }) {
-        const { firstName, familyName, nickName, imageUrl, email, password,
+        const { token, firstName, familyName, nickName, imageUrl, email, password,
         } = params
+        await new DomainService().tokenCheck(token);
         await new DomainService().emailDoubleCheck(email) !== null
 
         const userEntity = new User({

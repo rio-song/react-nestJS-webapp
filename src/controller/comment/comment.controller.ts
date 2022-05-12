@@ -1,4 +1,4 @@
-import { Body, Controller, Post, Put, Param, Delete } from '@nestjs/common'
+import { Body, Controller, Post, Put, Param, Delete, Headers } from '@nestjs/common'
 import { PrismaClient } from '@prisma/client'
 import { PostPutCommentRequest } from './request/post-put-comment-request'
 import { PostCommentUseCase } from 'src/app/comment/usecase/post-comment-usecase'
@@ -15,12 +15,14 @@ export class CommentController {
     async postUser(
         @Param('userId') userId: string,
         @Param('postId') postId: string,
+        @Headers('token') token: string,
         @Body() postCommentDto: PostPutCommentRequest,
     ): Promise<void> {
         const prisma = new PrismaClient()
         const commentRepo = new CommentRepository(prisma)
         const usecase = new PostCommentUseCase(commentRepo)
         await usecase.do({
+            token: token,
             userId: userId,
             postId: postId,
             comment: postCommentDto.comment
@@ -32,12 +34,14 @@ export class CommentController {
         @Param('userId') userId: string,
         @Param('postId') postId: string,
         @Param('commentId') commentId: string,
+        @Headers('token') token: string,
         @Body() postCommentDto: PostPutCommentRequest,
     ): Promise<void> {
         const prisma = new PrismaClient()
         const commentRepo = new CommentRepository(prisma)
         const usecase = new PutCommentUseCase(commentRepo)
         await usecase.do({
+            token: token,
             userId: userId,
             postId: postId,
             commentId: commentId,
@@ -50,11 +54,13 @@ export class CommentController {
         @Param('userId') userId: string,
         @Param('postId') postId: string,
         @Param('commentId') commentId: string,
+        @Headers('token') token: string,
     ): Promise<void> {
         const prisma = new PrismaClient()
         const commentRepo = new CommentRepository(prisma)
         const usecase = new DeletCommentUseCase(commentRepo)
         await usecase.do({
+            token: token,
             userId: userId,
             postId: postId,
             commentId: commentId

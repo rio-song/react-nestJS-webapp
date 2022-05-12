@@ -1,5 +1,6 @@
 import { Comment } from "src/domain/entity/comment"
 import { ICommentRepository } from "src/domain/repository-interface/comment-repository"
+import { DomainService } from 'src/domain/domain-service/domain-service'
 
 export class PutCommentUseCase {
     private readonly commentRepo: ICommentRepository
@@ -7,13 +8,15 @@ export class PutCommentUseCase {
     public constructor(commentRepo: ICommentRepository) {
         this.commentRepo = commentRepo
     }
-    public async do(params: { userId: string, postId: string, commentId: string; comment: string, }) {
+    public async do(params: { token: string, userId: string, postId: string, commentId: string; comment: string, }) {
         const {
+            token,
             userId,
             postId,
             commentId,
             comment,
         } = params
+        await new DomainService().tokenCheck(token);
 
         const savedcomment = await this.commentRepo.getComment(commentId);
 

@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Post, Put, Param, Request, Delete } from '@nestjs/common'
+import { Body, Controller, Get, Post, Put, Param, Headers, Delete } from '@nestjs/common'
 import { PrismaClient } from '@prisma/client'
 import { GetPostsAllRequest } from './request/get-posts-all-request'
 import { GetPostsAllResponse } from './response/get-posts-all-response'
@@ -19,11 +19,15 @@ import { PostRepository } from 'src/infra/post/post-repository'
 })
 export class PostController {
     @Get()
-    async getAllPosts(@Body() getAllPostsDto: GetPostsAllRequest): Promise<GetPostsAllResponse> {
+    async getAllPosts(
+        @Body() getAllPostsDto: GetPostsAllRequest,
+        @Headers('token') token: string | null,
+    ): Promise<GetPostsAllResponse> {
         const prisma = new PrismaClient()
         const qs = new PostQS(prisma)
         const usecase = new GetPostsAllUseCase(qs)
         const result = await usecase.do({
+            token: token,
             count: getAllPostsDto.count,
             lastPostId: getAllPostsDto.lastPostId
         })
@@ -31,11 +35,16 @@ export class PostController {
         return response
     }
     @Get('/userId/:userId')
-    async getUserAllPosts(@Body() getAllPostsDto: GetPostsAllRequest, @Param() param): Promise<GetPostsAllResponse> {
+    async getUserAllPosts(
+        @Body() getAllPostsDto: GetPostsAllRequest,
+        @Param() param,
+        @Headers('token') token: string,
+    ): Promise<GetPostsAllResponse> {
         const prisma = new PrismaClient()
         const qs = new PostQS(prisma)
         const usecase = new GetPostsUserAllUseCase(qs)
         const result = await usecase.do({
+            token: token,
             userId: param.userId,
             count: getAllPostsDto.count,
             lastPostId: getAllPostsDto.lastPostId
@@ -45,11 +54,15 @@ export class PostController {
     }
 
     @Get('/postId/:postId')
-    async getPostDetail(@Param() param): Promise<GetPostDetailResponse> {
+    async getPostDetail(
+        @Param() param,
+        @Headers('token') token: string,
+    ): Promise<GetPostDetailResponse> {
         const prisma = new PrismaClient()
         const qs = new PostDetailQS(prisma)
         const usecase = new GetPostDetailUseCase(qs)
         const result = await usecase.do({
+            token: token,
             postId: param.postId
         })
         const response = new GetPostDetailResponse({ PostDetails: result })
@@ -61,11 +74,13 @@ export class PostController {
     async postUser(
         @Param() userId: string,
         @Body() postUserDto: PostPutUserRequest,
+        @Headers('token') token: string,
     ): Promise<void> {
         const prisma = new PrismaClient()
         const postRepo = new PostRepository(prisma)
         const usecase = new PostPostUseCase(postRepo)
         await usecase.do({
+            token: token,
             userId: userId,
             imageUrl: postUserDto.imageUrl,
             title: postUserDto.title,
@@ -78,11 +93,13 @@ export class PostController {
         @Param('userId') userId: string,
         @Param('postId') postId: string,
         @Body() putUserDto: PostPutUserRequest,
+        @Headers('token') token: string,
     ): Promise<void> {
         const prisma = new PrismaClient()
         const postRepo = new PostRepository(prisma)
         const usecase = new PutPostUseCase(postRepo)
         await usecase.do({
+            token: token,
             userId: userId,
             postId: postId,
             imageUrl: putUserDto.imageUrl,
@@ -96,11 +113,13 @@ export class PostController {
     async deletePost(
         @Param('userId') userId: string,
         @Param('postId') postId: string,
+        @Headers('token') token: string,
     ): Promise<void> {
         const prisma = new PrismaClient()
         const postRepo = new PostRepository(prisma)
         const usecase = new DeletePostUseCase(postRepo)
         await usecase.do({
+            token: token,
             userId: userId,
             postId: postId
         })

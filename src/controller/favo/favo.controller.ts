@@ -1,4 +1,4 @@
-import { Controller, Post, Param, Delete } from '@nestjs/common'
+import { Controller, Post, Param, Delete, Headers } from '@nestjs/common'
 import { PrismaClient } from '@prisma/client'
 import { PostFavoUseCase } from 'src/app/favo/usecase/post-favo-usecase'
 import { DeleteFavoUseCase } from 'src/app/favo/usecase/delete-favo-usecase'
@@ -13,11 +13,13 @@ export class FavoController {
     async postUser(
         @Param('userId') userId: string,
         @Param('postId') postId: string,
+        @Headers('token') token: string,
     ): Promise<void> {
         const prisma = new PrismaClient()
         const favoRepo = new FavoRepository(prisma)
         const usecase = new PostFavoUseCase(favoRepo)
         await usecase.do({
+            token: token,
             userId: userId,
             postId: postId,
         })
@@ -27,11 +29,13 @@ export class FavoController {
     async deletePost(
         @Param('userId') userId: string,
         @Param('postId') postId: string,
+        @Headers('token') token: string,
     ): Promise<void> {
         const prisma = new PrismaClient()
         const favoRepo = new FavoRepository(prisma)
         const usecase = new DeleteFavoUseCase(favoRepo)
         await usecase.do({
+            token: token,
             userId: userId,
             postId: postId,
         })

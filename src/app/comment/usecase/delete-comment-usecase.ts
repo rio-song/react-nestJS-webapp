@@ -1,4 +1,4 @@
-import { Comment } from "src/domain/entity/comment"
+import { DomainService } from 'src/domain/domain-service/domain-service'
 import { ICommentRepository } from "src/domain/repository-interface/comment-repository"
 
 export class DeletCommentUseCase {
@@ -8,12 +8,15 @@ export class DeletCommentUseCase {
         this.commentRepo = commentRepo
     }
 
-    public async do(params: { userId: string, postId: string, commentId: string }) {
+    public async do(params: { token: string, userId: string, postId: string, commentId: string }) {
+
         const {
+            token,
             userId,
             postId,
             commentId
         } = params
+        await new DomainService().tokenCheck(token);
 
         await this.commentRepo.delete(postId, userId, commentId);
 
