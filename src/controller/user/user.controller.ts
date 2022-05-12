@@ -8,6 +8,7 @@ import { GetUserUseCase } from 'src/app/user/usecase/get-user-usecase'
 import { PutUserRequest } from './request/put-user-request'
 import { PostUserUseCase } from 'src/app/user/usecase/post-user-usecase'
 import { PostUserRequest } from './request/post-user-request'
+import { PostPutUserResponse } from './response/post-put-user-response'
 
 @Controller({
     path: 'api/user',
@@ -27,32 +28,32 @@ export class UserController {
 
     @Post()
     async postUser(
-        @Param() userId: string,
         @Body() postUserDto: PostUserRequest,
-    ): Promise<void> {
+    ): Promise<PostPutUserResponse> {
         const prisma = new PrismaClient()
         const userRepo = new UserRepository(prisma)
         const usecase = new PostUserUseCase(userRepo)
-        await usecase.do({
+        const result = await usecase.do({
             firstName: postUserDto.firstName,
             familyName: postUserDto.familyName,
             nickName: postUserDto.nickName,
             imageUrl: postUserDto.imageUrl,
             email: postUserDto.email,
             password: postUserDto.password,
-
         })
+        const response = new PostPutUserResponse(result)
+        return response
     }
 
     @Put('/userId/:userId')
     async putUser(
         @Param('userId') userId: string,
         @Body() putUserDto: PutUserRequest,
-    ): Promise<void> {
+    ): Promise<PostPutUserResponse> {
         const prisma = new PrismaClient()
         const userRepo = new UserRepository(prisma)
         const usecase = new PutUserUseCase(userRepo)
-        await usecase.do({
+        const result = await usecase.do({
             userId: userId,
             firstName: putUserDto.firstName,
             familyName: putUserDto.familyName,
@@ -61,6 +62,8 @@ export class UserController {
             email: putUserDto.email,
             password: putUserDto.password,
         })
+        const response = new PostPutUserResponse(result)
+        return response
     }
 
 

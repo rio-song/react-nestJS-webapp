@@ -25,6 +25,14 @@ model User {
   posted_user   PostedUser[]
   comments      Comments[]
   favos         Favos[]
+  Login         Login[]
+}
+
+model Login {
+  id      String @id
+  token   String
+  user_id String
+  User    User?  @relation(fields: [user_id], references: [id])
 }
 
 model Post {
@@ -43,37 +51,31 @@ model Post {
 model PostedUser {
   id         String   @id
   user_id    String
-  //user       User     @relation(fields: [user_id], references: [id])
+  user       User     @relation(fields: [user_id], references: [id])
   post_id    String
   post       Post     @relation(fields: [post_id], references: [id])
   created_at DateTime @default(now())
   updated_at DateTime @default(now())
-  User       User?    @relation(fields: [userId], references: [id])
-  userId     String?
 }
 
 model Comments {
   id           String   @id
   user_id      String
-  //user         User     @relation(fields: [user_id], references: [id])
+  user         User     @relation(fields: [user_id], references: [id])
   post_id      String
   post         Post     @relation(fields: [post_id], references: [id])
   comment      String
   commented_at DateTime
   created_at   DateTime @default(now())
   updated_at   DateTime @default(now())
-  User         User?    @relation(fields: [userId], references: [id])
-  userId       String?
 }
 
 model Favos {
   id         String   @id
   user_id    String
-  //user       User     @relation(fields: [user_id], references: [id])
+  user       User     @relation(fields: [user_id], references: [id])
   post_id    String
   post       Post     @relation(fields: [post_id], references: [id])
   created_at DateTime @default(now())
   updated_at DateTime @default(now())
-  User       User?    @relation(fields: [userId], references: [id])
-  userId     String?
 }
