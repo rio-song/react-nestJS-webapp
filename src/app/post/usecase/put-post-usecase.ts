@@ -26,7 +26,7 @@ export class PutPostUseCase {
             title,
             text,
             postedAt: new Date(),
-            postedUser: userId,
+            postedUser: String(Object.values(userId)),
             createAt: post.getCreateAt()
         })
 

@@ -16,7 +16,7 @@ model User {
   first_name    String
   family_name   String
   nick_name     String
-  userImgUrl    String
+  user_img_url  String
   email         String
   password      String
   registered_at DateTime
