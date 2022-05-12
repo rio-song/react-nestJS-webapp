@@ -11,7 +11,7 @@ import { CommentRepository } from 'src/infra/comment/comment-repository'
     path: 'api/comment',
 })
 export class CommentController {
-    @Post(':postId/:userId')
+    @Post('/postId/:postId/userId/:userId')
     async postUser(
         @Param('userId') userId: string,
         @Param('postId') postId: string,
@@ -27,7 +27,7 @@ export class CommentController {
         })
     }
 
-    @Put(':userId/:postId/:commentId')
+    @Put('/postId/:postId/userId/:userId/commentId/:commentId')
     async putUser(
         @Param('userId') userId: string,
         @Param('postId') postId: string,
@@ -45,8 +45,7 @@ export class CommentController {
         })
     }
 
-
-    @Delete(':userId/:postId/:commentId')
+    @Delete('/postId/:postId/userId/:userId/commentId/:commentId')
     async deletePost(
         @Param('userId') userId: string,
         @Param('postId') postId: string,

@@ -9,7 +9,7 @@ import { FavoRepository } from 'src/infra/favo/post-repository'
     path: 'api/favo',
 })
 export class FavoController {
-    @Post(':postId/:userId')
+    @Post('/postId/:postId/userId/:userId')
     async postUser(
         @Param('userId') userId: string,
         @Param('postId') postId: string,
@@ -23,7 +23,7 @@ export class FavoController {
         })
     }
 
-    @Delete(':userId/:postId/')
+    @Delete('/postId/:postId/userId/:userId')
     async deletePost(
         @Param('userId') userId: string,
         @Param('postId') postId: string,
