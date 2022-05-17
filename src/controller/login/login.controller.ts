@@ -1,9 +1,9 @@
-import { Body, Controller, Get, } from '@nestjs/common'
+import { Body, Controller, Post, } from '@nestjs/common'
 import { PrismaClient } from '@prisma/client'
 import { GetLoginUseCase } from 'src/app/login/usecase/get-login-usecase'
 import { GetLoginRequest } from './request/get-login-request'
 import { GetLoginResponse } from './response/get-login-response'
-import { LoginQS } from 'src/infra/login/login-qs'
+import { LoginRepository } from 'src/infra/login/login-repository'
 import { UnauthorizedException, BadRequestException, NotFoundException, InternalServerErrorException } from '../../util/error'
 
 @Controller({
@@ -11,13 +11,13 @@ import { UnauthorizedException, BadRequestException, NotFoundException, Internal
 })
 export class LoginController {
 
-    @Get()
+    @Post()
     async getLogin(
         @Body() getLoginDto: GetLoginRequest,
     ): Promise<GetLoginResponse> {
         const prisma = new PrismaClient()
-        const qs = new LoginQS(prisma)
-        const usecase = new GetLoginUseCase(qs)
+        const loginRepo = new LoginRepository(prisma)
+        const usecase = new GetLoginUseCase(loginRepo)
         try {
             const result = await usecase.do({
                 email: getLoginDto.email,
@@ -26,7 +26,7 @@ export class LoginController {
             const response = new GetLoginResponse(result)
             return response
         } catch (e) {
-            if (e.name === 'BadRequestException') {
+            if (e === 'notFoundAccount') {
                 throw new BadRequestException();
             }
             throw new InternalServerErrorException();

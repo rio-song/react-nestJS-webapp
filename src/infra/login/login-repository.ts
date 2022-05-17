@@ -1,34 +1,25 @@
 import { PrismaClient } from '@prisma/client'
-import {
-    LoginDTO,
-    ILoginQS,
-} from 'src/app/login/login-qs-if'
+import { ILoginRepository } from 'src/domain/repository-interface/login-repository'
 import { createRandomIdString } from 'src/util/random'
 
-
-export class LoginQS implements ILoginQS {
+export class LoginRepository implements ILoginRepository {
     private prismaClient: PrismaClient
     public constructor(prismaClient: PrismaClient) {
         this.prismaClient = prismaClient
     }
 
-    public async getLogin(email, password): Promise<LoginDTO> {
-        console.log("email" + email)
-        console.log("password" + password)
+    public async getLogin(email, password): Promise<string> {
         const login = await this.prismaClient.user.findFirst({
             where: {
                 email: email,
                 password: password
             }
         })
-        console.log("login" + login)
         if (login == null) {
             const e = new Error('notFoundAccount')
             return Promise.reject(e.message);
         }
-        return new LoginDTO({
-            userId: login.id
-        })
+        return login.id
     }
     public async setToken(userId: string, token: string): Promise<boolean> {
         await this.prismaClient.$transaction(async (prismaClient) => {
@@ -49,4 +40,5 @@ export class LoginQS implements ILoginQS {
         })
         return true
     }
+
 }
