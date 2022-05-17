@@ -9,6 +9,75 @@ export class PostQS implements IPostQS {
     public constructor(prismaClient: PrismaClient) {
         this.prismaClient = prismaClient
     }
+    public async getPostsAllwithFavoStatus(userId: string, count: number, lastPostId: string | null): Promise<PostDTO[]> {
+        if (lastPostId != null) {
+            const allPosts = await this.prismaClient.post.findMany({
+                take: count,
+                skip: 1,
+                cursor: {
+                    id: lastPostId
+                },
+                orderBy: {
+                    posted_at: 'desc',
+                },
+                include: {
+                    _count: {
+                        select: { favos: true, comments: true },
+                    },
+                    favos: {
+                        where: {
+                            user_id: userId
+                        }
+                    }
+                }
+            })
+            return allPosts.map(
+                (postDM) =>
+                    new PostDTO({
+                        id: postDM.id,
+                        imageUrl: postDM.image_url,
+                        title: postDM.title,
+                        text: postDM.text,
+                        postedAt: postDM.posted_at,
+                        favosCount: postDM._count.favos,
+                        favoStatus: postDM.favos.length,
+                        commentsCount: postDM._count.comments,
+                        lastPostId: allPosts.slice(-1)[0].id
+                    }),
+            )
+        } else {
+            const allPosts = await this.prismaClient.post.findMany({
+                take: count,
+                orderBy: {
+                    posted_at: 'desc',
+                },
+                include: {
+                    _count: {
+                        select: { favos: true, comments: true },
+                    },
+                    favos: {
+                        where: {
+                            user_id: userId
+                        }
+                    }
+                }
+            })
+            return allPosts.map(
+                (postDM) =>
+                    new PostDTO({
+                        id: postDM.id,
+                        imageUrl: postDM.image_url,
+                        title: postDM.title,
+                        text: postDM.text,
+                        postedAt: postDM.posted_at,
+                        favosCount: postDM._count.favos,
+                        favoStatus: postDM.favos.length,
+                        commentsCount: postDM._count.comments,
+                        lastPostId: allPosts.slice(-1)[0].id
+                    }),
+            )
+        }
+    }
 
     public async getPostsAll(count: number, lastPostId: string | null): Promise<PostDTO[]> {
         if (lastPostId != null) {
@@ -37,6 +106,7 @@ export class PostQS implements IPostQS {
                         text: postDM.text,
                         postedAt: postDM.posted_at,
                         favosCount: postDM._count.favos,
+                        favoStatus: null,
                         commentsCount: postDM._count.comments,
                         lastPostId: allPosts.slice(-1)[0].id
                     }),
@@ -62,6 +132,7 @@ export class PostQS implements IPostQS {
                         text: postDM.text,
                         postedAt: postDM.posted_at,
                         favosCount: postDM._count.favos,
+                        favoStatus: null,
                         commentsCount: postDM._count.comments,
                         lastPostId: allPosts.slice(-1)[0].id
                     }),
@@ -88,6 +159,10 @@ export class PostQS implements IPostQS {
                     },
                     _count: {
                         select: { favos: true, comments: true },
+                    }, favos: {
+                        where: {
+                            user_id: userId
+                        }
                     }
                 }
             })
@@ -100,6 +175,7 @@ export class PostQS implements IPostQS {
                         text: postDM.text,
                         postedAt: postDM.posted_at,
                         favosCount: postDM._count.favos,
+                        favoStatus: postDM.favos.length,
                         commentsCount: postDM._count.comments,
                         lastPostId: allPosts.slice(-1)[0].id
                     }),
@@ -118,6 +194,10 @@ export class PostQS implements IPostQS {
                     },
                     _count: {
                         select: { favos: true, comments: true },
+                    }, favos: {
+                        where: {
+                            user_id: userId
+                        }
                     }
                 }
             })
@@ -130,6 +210,7 @@ export class PostQS implements IPostQS {
                         text: postDM.text,
                         postedAt: postDM.posted_at,
                         favosCount: postDM._count.favos,
+                        favoStatus: postDM.favos.length,
                         commentsCount: postDM._count.comments,
                         lastPostId: allPosts.slice(-1)[0].id
                     }),

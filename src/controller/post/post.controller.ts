@@ -18,9 +18,10 @@ import { PostRepository } from 'src/infra/post/post-repository'
     path: 'api/post',
 })
 export class PostController {
-    @Get()
+    @Get('/userId/:userId')
     async getAllPosts(
         @Body() getAllPostsDto: GetPostsAllRequest,
+        @Param() param,
         @Headers('token') token: string | null,
     ): Promise<GetPostsAllResponse> {
         const prisma = new PrismaClient()
@@ -28,13 +29,14 @@ export class PostController {
         const usecase = new GetPostsAllUseCase(qs)
         const result = await usecase.do({
             token: token,
+            userId: param.userId,
             count: getAllPostsDto.count,
             lastPostId: getAllPostsDto.lastPostId
         })
         const response = new GetPostsAllResponse({ Posts: result })
         return response
     }
-    @Get('/userId/:userId')
+    @Get('/user/userId/:userId')
     async getUserAllPosts(
         @Body() getAllPostsDto: GetPostsAllRequest,
         @Param() param,
@@ -53,7 +55,7 @@ export class PostController {
         return response
     }
 
-    @Get('/postId/:postId')
+    @Get('/postId/:postId/userId/:userId')
     async getPostDetail(
         @Param() param,
         @Headers('token') token: string,
@@ -63,7 +65,8 @@ export class PostController {
         const usecase = new GetPostDetailUseCase(qs)
         const result = await usecase.do({
             token: token,
-            postId: param.postId
+            postId: param.postId,
+            userId: param.userId
         })
         const response = new GetPostDetailResponse({ PostDetails: result })
         return response
@@ -79,6 +82,7 @@ export class PostController {
         const prisma = new PrismaClient()
         const postRepo = new PostRepository(prisma)
         const usecase = new PostPostUseCase(postRepo)
+
         await usecase.do({
             token: token,
             userId: userId,

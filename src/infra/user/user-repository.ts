@@ -17,7 +17,7 @@ export class UserRepository implements IUserRepository {
                 first_name: firstName,
                 family_name: familyName,
                 nick_name: nickName,
-                user_img_url: imageUrl,
+                user_img_url: imageUrl != null ? imageUrl : undefined,
                 email: email,
                 password: password,
                 registered_at: registeredAt,

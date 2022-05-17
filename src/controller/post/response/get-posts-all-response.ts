@@ -7,13 +7,14 @@ export class GetPostsAllResponse {
 
     public constructor(params: { Posts: PostDTO[] }) {
         const { Posts } = params
-        this.Post = Posts.map(({ id, imageUrl, title, postedAt, favosCount, commentsCount, lastPostId }) => {
+        this.Post = Posts.map(({ id, imageUrl, title, postedAt, favosCount, favoStatus, commentsCount, lastPostId }) => {
             return new Post({
                 id,
                 imageUrl,
                 title,
                 postedAt,
                 favosCount,
+                favoStatus,
                 commentsCount,
                 lastPostId
             })
@@ -38,6 +39,9 @@ class Post {
     favosCount: number
 
     @ApiProperty()
+    favoStatus: boolean
+
+    @ApiProperty()
     commentsCount: number
 
     @ApiProperty()
@@ -48,6 +52,7 @@ class Post {
         imageUrl: string
         title: string
         postedAt: Date
+        favoStatus: boolean
         favosCount: number
         commentsCount: number
         lastPostId: string
@@ -56,6 +61,7 @@ class Post {
         this.imageUrl = params.imageUrl
         this.title = params.title
         this.postedAt = params.postedAt
+        this.favoStatus = params.favoStatus
         this.favosCount = params.favosCount
         this.commentsCount = params.commentsCount
         this.lastPostId = params.lastPostId

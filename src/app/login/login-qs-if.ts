@@ -12,5 +12,4 @@ export class LoginDTO {
 export interface ILoginQS {
     getLogin(email: string, password: string): Promise<LoginDTO>
     setToken(userId: string, token: string): Promise<boolean>
-    checkLogin(userId: string): Promise<boolean>
 }

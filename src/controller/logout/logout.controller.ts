@@ -17,5 +17,4 @@ export class LogoutController {
         const usecase = new GetLogoutUseCase(qs)
         await usecase.do(token)
     }
-
 }

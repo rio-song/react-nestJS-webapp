@@ -9,22 +9,20 @@ export class GetLoginUseCase {
     public async do(params: { email: string, password: string }) {
         try {
             const login = await this.loginQS.getLogin(params.email, params.password);
-            const checkLogin = await this.loginQS.checkLogin(login.userId);
 
-            const express = require("express");
             const jwt = require("jsonwebtoken");
-            const app = express();
-            app.use(express.json())
-            app.use(express.urlencoded({ extended: true }));
+
             const payload = {
                 user: login.userId
             };
             const SECRET_KEY = "abcdefg";
             const option = {
-                expiresIn: '10m'
+                algorithm: 'HS256',
+                expiresIn: '1h'
             }
-            const token = String(jwt.sign(payload, SECRET_KEY, option));
+            const token = jwt.sign(payload, SECRET_KEY, option);
             await this.loginQS.setToken(login.userId, token);
+
             return { token: token, userId: login.userId }
         } catch (error) {
             // memo: エラー処理

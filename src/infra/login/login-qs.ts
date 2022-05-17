@@ -24,29 +24,22 @@ export class LoginQS implements ILoginQS {
         })
     }
     public async setToken(userId: string, token: string): Promise<boolean> {
-        const login = await this.prismaClient.login.create({
-            data: {
-                id: createRandomIdString(),
-                user_id: userId,
-                token: token
-            }
+        await this.prismaClient.$transaction(async (prismaClient) => {
+
+            await this.prismaClient.login.deleteMany({
+                where: {
+                    user_id: userId,
+                }
+            })
+
+            await this.prismaClient.login.create({
+                data: {
+                    id: createRandomIdString(),
+                    user_id: userId,
+                    token: token
+                }
+            })
         })
-        if (login) {
-            return true
-        } else {
-            throw new Error("トークンの登録失敗")
-        }
-    }
-    public async checkLogin(userId: string): Promise<boolean> {
-        const setToken = await this.prismaClient.login.findFirst({
-            where: {
-                user_id: userId
-            }
-        })
-        if (setToken == null) {
-            return true
-        } else {
-            throw new Error("既にトークンを登録済みです")
-        }
+        return true
     }
 }

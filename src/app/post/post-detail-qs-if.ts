@@ -5,24 +5,26 @@ export class PostDetailDTO {
     public readonly text: string
     public readonly postedAt: Date
     public readonly favosCount: number
+    public readonly favo: boolean
     public readonly commentsCount: number
     public readonly comments: CommentDTO[]
 
-    public constructor(props: { id: string; imageUrl: string; title: string; text: string; postedAt: Date; favosCount: number; commentsCount: number; comments: CommentDTO[]; }) {
-        const { id, imageUrl, title, text, postedAt, favosCount, commentsCount, comments } = props
+    public constructor(props: { id: string; imageUrl: string; title: string; text: string; postedAt: Date; favosCount: number; favo: boolean; commentsCount: number; comments: CommentDTO[]; }) {
+        const { id, imageUrl, title, text, postedAt, favosCount, favo, commentsCount, comments } = props
         this.id = id
         this.imageUrl = imageUrl
         this.title = title
         this.text = text
         this.postedAt = postedAt
         this.favosCount = favosCount
+        this.favo = favo
         this.commentsCount = commentsCount
         this.comments = comments
     }
 }
 
 export interface IPostDetailQS {
-    getPostDetail(postId: string): Promise<PostDetailDTO>
+    getPostDetail(postId: string, userId: string): Promise<PostDetailDTO>
 }
 
 export class CommentDTO {

@@ -29,14 +29,12 @@ export class UserController {
 
     @Post()
     async postUser(
-        @Headers('token') token: string,
         @Body() postUserDto: PostUserRequest,
     ): Promise<PostPutUserResponse> {
         const prisma = new PrismaClient()
         const userRepo = new UserRepository(prisma)
         const usecase = new PostUserUseCase(userRepo)
         const result = await usecase.do({
-            token: token,
             firstName: postUserDto.firstName,
             familyName: postUserDto.familyName,
             nickName: postUserDto.nickName,

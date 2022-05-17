@@ -11,15 +11,13 @@ export class PostUserUseCase {
     }
 
     public async do(params: {
-        token: string,
         firstName: string; familyName: string;
-        nickName: string; imageUrl: string; email: string;
+        nickName: string; imageUrl: string | null; email: string;
         password: string;
     }) {
-        const { token, firstName, familyName, nickName, imageUrl, email, password,
+        const { firstName, familyName, nickName, imageUrl, email, password,
         } = params
-        await new DomainService().tokenCheck(token);
-        await new DomainService().emailDoubleCheck(email) !== null
+        await new DomainService().emailDoubleCheck(email)
 
         const userEntity = new User({
             id: createRandomIdString(),

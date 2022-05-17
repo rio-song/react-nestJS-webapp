@@ -12,7 +12,7 @@ export class User {
 
     public constructor(props: {
         id: string; firstName: string; familyName: string;
-        nickName: string; imageUrl: string; email: string;
+        nickName: string; imageUrl: string | null; email: string;
         password: string; registeredAt: Date; createdAt: Date | null;
     }) {
         const { id, firstName, familyName, nickName, imageUrl, email, password,
