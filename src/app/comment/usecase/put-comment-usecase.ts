@@ -17,6 +17,9 @@ export class PutCommentUseCase {
             comment,
         } = params
         await new DomainService().tokenCheck(token);
+        if ('tokenError') {
+            return 'tokenError'
+        }
 
         const savedcomment = await this.commentRepo.getComment(commentId);
 

@@ -17,6 +17,9 @@ export class DeletCommentUseCase {
             commentId
         } = params
         await new DomainService().tokenCheck(token);
+        if ('tokenError') {
+            return 'tokenError'
+        }
 
         await this.commentRepo.delete(postId, userId, commentId);
 

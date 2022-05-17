@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Post, Put, Param, Headers, Delete } from '@nestjs/common'
+import { Body, Controller, Get, Post, Put, Param, Headers, Delete, HttpException, HttpStatus } from '@nestjs/common'
 import { PrismaClient } from '@prisma/client'
 import { GetPostsAllRequest } from './request/get-posts-all-request'
 import { GetPostsAllResponse } from './response/get-posts-all-response'
@@ -13,6 +13,7 @@ import { PostPostUseCase } from 'src/app/post/usecase/post-post-usecase'
 import { PutPostUseCase } from 'src/app/post/usecase/put-post-usecase'
 import { DeletePostUseCase } from 'src/app/post/usecase/delete-post-usecase'
 import { PostRepository } from 'src/infra/post/post-repository'
+import { UnauthorizedException, BadRequestException, NotFoundException, InternalServerErrorException } from '../../util/error'
 
 @Controller({
     path: 'api/post',
@@ -27,14 +28,24 @@ export class PostController {
         const prisma = new PrismaClient()
         const qs = new PostQS(prisma)
         const usecase = new GetPostsAllUseCase(qs)
-        const result = await usecase.do({
-            token: token,
-            userId: param.userId,
-            count: getAllPostsDto.count,
-            lastPostId: getAllPostsDto.lastPostId
-        })
-        const response = new GetPostsAllResponse({ Posts: result })
-        return response
+        try {
+            const result = await usecase.do({
+                token: token,
+                userId: param.userId,
+                count: getAllPostsDto.count,
+                lastPostId: getAllPostsDto.lastPostId
+            })
+            if (result === 'tokenError') {
+                throw new UnauthorizedException();
+            }
+            const response = new GetPostsAllResponse({ Posts: result })
+            return response
+        } catch (e) {
+            if (e.name === 'UnauthorizedException') {
+                throw new UnauthorizedException();
+            }
+            throw new InternalServerErrorException();
+        }
     }
     @Get('/user/userId/:userId')
     async getUserAllPosts(
@@ -45,14 +56,24 @@ export class PostController {
         const prisma = new PrismaClient()
         const qs = new PostQS(prisma)
         const usecase = new GetPostsUserAllUseCase(qs)
-        const result = await usecase.do({
-            token: token,
-            userId: param.userId,
-            count: getAllPostsDto.count,
-            lastPostId: getAllPostsDto.lastPostId
-        })
-        const response = new GetPostsAllResponse({ Posts: result })
-        return response
+        try {
+            const result = await usecase.do({
+                token: token,
+                userId: param.userId,
+                count: getAllPostsDto.count,
+                lastPostId: getAllPostsDto.lastPostId
+            })
+            if (result === 'tokenError') {
+                throw new UnauthorizedException();
+            }
+            const response = new GetPostsAllResponse({ Posts: result })
+            return response
+        } catch (e) {
+            if (e.name === 'UnauthorizedException') {
+                throw new UnauthorizedException();
+            }
+            throw new InternalServerErrorException();
+        }
     }
 
     @Get('/postId/:postId/userId/:userId')
@@ -63,13 +84,23 @@ export class PostController {
         const prisma = new PrismaClient()
         const qs = new PostDetailQS(prisma)
         const usecase = new GetPostDetailUseCase(qs)
-        const result = await usecase.do({
-            token: token,
-            postId: param.postId,
-            userId: param.userId
-        })
-        const response = new GetPostDetailResponse({ PostDetails: result })
-        return response
+        try {
+            const result = await usecase.do({
+                token: token,
+                postId: param.postId,
+                userId: param.userId
+            })
+            if (result === 'tokenError') {
+                throw new UnauthorizedException();
+            }
+            const response = new GetPostDetailResponse({ PostDetails: result })
+            return response
+        } catch (e) {
+            if (e.name === 'UnauthorizedException') {
+                throw new UnauthorizedException();
+            }
+            throw new InternalServerErrorException();
+        }
     }
 
 
@@ -82,14 +113,23 @@ export class PostController {
         const prisma = new PrismaClient()
         const postRepo = new PostRepository(prisma)
         const usecase = new PostPostUseCase(postRepo)
-
-        await usecase.do({
-            token: token,
-            userId: userId,
-            imageUrl: postUserDto.imageUrl,
-            title: postUserDto.title,
-            text: postUserDto.text,
-        })
+        try {
+            const result = await usecase.do({
+                token: token,
+                userId: userId,
+                imageUrl: postUserDto.imageUrl,
+                title: postUserDto.title,
+                text: postUserDto.text,
+            })
+            if (result === 'tokenError') {
+                throw new UnauthorizedException();
+            }
+        } catch (e) {
+            if (e.name === 'UnauthorizedException') {
+                throw new UnauthorizedException();
+            }
+            throw new InternalServerErrorException();
+        }
     }
 
     @Put('/userId/:userId/postId/:postId')
@@ -102,14 +142,24 @@ export class PostController {
         const prisma = new PrismaClient()
         const postRepo = new PostRepository(prisma)
         const usecase = new PutPostUseCase(postRepo)
-        await usecase.do({
-            token: token,
-            userId: userId,
-            postId: postId,
-            imageUrl: putUserDto.imageUrl,
-            title: putUserDto.title,
-            text: putUserDto.text,
-        })
+        try {
+            const result = await usecase.do({
+                token: token,
+                userId: userId,
+                postId: postId,
+                imageUrl: putUserDto.imageUrl,
+                title: putUserDto.title,
+                text: putUserDto.text,
+            })
+            if (result === 'tokenError') {
+                throw new UnauthorizedException();
+            }
+        } catch (e) {
+            if (e.name === 'UnauthorizedException') {
+                throw new UnauthorizedException();
+            }
+            throw new InternalServerErrorException();
+        }
     }
 
 
@@ -122,10 +172,20 @@ export class PostController {
         const prisma = new PrismaClient()
         const postRepo = new PostRepository(prisma)
         const usecase = new DeletePostUseCase(postRepo)
-        await usecase.do({
-            token: token,
-            userId: userId,
-            postId: postId
-        })
+        try {
+            const result = await usecase.do({
+                token: token,
+                userId: userId,
+                postId: postId
+            })
+            if (result === 'tokenError') {
+                throw new UnauthorizedException();
+            }
+        } catch (e) {
+            if (e.name === 'UnauthorizedException') {
+                throw new UnauthorizedException();
+            }
+            throw new InternalServerErrorException();
+        }
     }
 }

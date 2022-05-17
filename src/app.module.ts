@@ -5,6 +5,7 @@ import { PostController } from './controller/post/post.controller';
 import { UserController } from './controller/user/user.controller';
 import { LoginController } from './controller/login/login.controller';
 import { LogoutController } from './controller/logout/logout.controller';
+//import { AllExceptionsFilter } from './controller/error';
 
 @Module({
   imports: [],

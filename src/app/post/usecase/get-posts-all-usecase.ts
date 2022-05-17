@@ -16,13 +16,15 @@ export class GetPostsAllUseCase {
         try {
             if (token != null) {
                 await new DomainService().tokenCheck(token);
+                if ('tokenError') {
+                    return 'tokenError'
+                }
                 return await this.postQS.getPostsAllwithFavoStatus(userId, count, lastPostId)
             } else {
                 return await this.postQS.getPostsAll(count, lastPostId)
             }
         } catch (error) {
-            // memo: エラー処理
-            throw error
+            return error
         }
     }
 }

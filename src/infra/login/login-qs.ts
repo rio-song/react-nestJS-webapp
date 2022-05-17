@@ -13,12 +13,19 @@ export class LoginQS implements ILoginQS {
     }
 
     public async getLogin(email, password): Promise<LoginDTO> {
+        console.log("email" + email)
+        console.log("password" + password)
         const login = await this.prismaClient.user.findFirst({
             where: {
                 email: email,
                 password: password
             }
         })
+        console.log("login" + login)
+        if (login == null) {
+            const e = new Error('notFoundAccount')
+            return Promise.reject(e.message);
+        }
         return new LoginDTO({
             userId: login.id
         })

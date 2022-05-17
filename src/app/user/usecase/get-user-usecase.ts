@@ -9,10 +9,12 @@ export class GetUserUseCase {
     public async do(token: string, userId: string) {
         try {
             await new DomainService().tokenCheck(token);
+            if ('tokenError') {
+                return 'tokenError'
+            }
             return await this.userQS.getUser(userId)
         } catch (error) {
-            // memo: エラー処理
-            throw error
+            return error;
         }
     }
 }

@@ -18,6 +18,10 @@ export class PostUserUseCase {
         const { firstName, familyName, nickName, imageUrl, email, password,
         } = params
         await new DomainService().emailDoubleCheck(email)
+        if ('emailDoubleError') {
+            return 'emailDoubleError'
+        }
+
 
         const userEntity = new User({
             id: createRandomIdString(),

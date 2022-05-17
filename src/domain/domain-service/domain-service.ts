@@ -9,7 +9,8 @@ export class DomainService {
             },
         })
         if (emailDoubleCheck !== null) {
-            throw new Error("既に存在するユーザーです")
+            const e = new Error('emailDoubleError')
+            return e.message;
         }
     }
 
@@ -21,12 +22,10 @@ export class DomainService {
         // トークンの検証
         jwt.verify(token, SECRET_KEY, (err, decoded) => {
             if (decoded) {
-                console.log("OK")
-                // 認証NGの場合
                 return
             } else {
-                console.log("エラー内容" + err)
-                throw new Error("認証エラー")
+                const e = new Error('tokenError')
+                return e.message;
             }
         });
     }

@@ -19,6 +19,9 @@ export class PostCommentUseCase {
         } = params
 
         await new DomainService().tokenCheck(token);
+        if ('tokenError') {
+            return 'tokenError'
+        }
 
         const commentEntity = new Comment({
             id: createRandomIdString(),

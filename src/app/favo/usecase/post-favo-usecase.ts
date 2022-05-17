@@ -16,6 +16,9 @@ export class PostFavoUseCase {
             postId,
         } = params
         await new DomainService().tokenCheck(token);
+        if ('tokenError') {
+            return 'tokenError'
+        }
         const favoEntity = new favoVO({
             userId,
             postId,

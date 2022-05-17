@@ -16,6 +16,9 @@ export class GetPostsUserAllUseCase {
 
         try {
             await new DomainService().tokenCheck(token);
+            if ('tokenError') {
+                return 'tokenError'
+            }
             return await this.postQS.getPostsUserAll(userId, count, lastPostId)
         } catch (error) {
             // memo: エラー処理

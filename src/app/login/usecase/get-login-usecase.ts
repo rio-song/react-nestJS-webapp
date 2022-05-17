@@ -10,6 +10,7 @@ export class GetLoginUseCase {
         try {
             const login = await this.loginQS.getLogin(params.email, params.password);
 
+            console.log('Loginの中身の確認' + login)
             const jwt = require("jsonwebtoken");
 
             const payload = {

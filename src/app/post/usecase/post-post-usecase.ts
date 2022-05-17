@@ -19,6 +19,9 @@ export class PostPostUseCase {
             text,
         } = params
         await new DomainService().tokenCheck(token);
+        if ('tokenError') {
+            return 'tokenError'
+        }
         const postEntity = new Post({
             id: createRandomIdString(),
             imageUrl,

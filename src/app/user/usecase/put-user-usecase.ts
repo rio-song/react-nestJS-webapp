@@ -20,7 +20,13 @@ export class PutUserUseCase {
         const { token, firstName, familyName, nickName, imageUrl, email, password,
         } = params
         await new DomainService().tokenCheck(token);
+        if ('tokenError') {
+            return 'tokenError'
+        }
         await new DomainService().emailDoubleCheck(email) !== null
+        if ('emailDoubleError') {
+            return 'emailDoubleError'
+        }
 
         const userEntity = new User({
             id: createRandomIdString(),

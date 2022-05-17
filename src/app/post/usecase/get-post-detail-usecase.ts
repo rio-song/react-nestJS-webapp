@@ -9,6 +9,9 @@ export class GetPostDetailUseCase {
     public async do(params: { token: string, postId: string; userId: string }) {
         let { token, postId, userId } = params
         await new DomainService().tokenCheck(token);
+        if ('tokenError') {
+            return 'tokenError'
+        }
         try {
             return await this.postQS.getPostDetail(postId, userId)
         } catch (error) {

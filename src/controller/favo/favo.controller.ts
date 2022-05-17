@@ -3,6 +3,7 @@ import { PrismaClient } from '@prisma/client'
 import { PostFavoUseCase } from 'src/app/favo/usecase/post-favo-usecase'
 import { DeleteFavoUseCase } from 'src/app/favo/usecase/delete-favo-usecase'
 import { FavoRepository } from 'src/infra/favo/post-repository'
+import { UnauthorizedException, BadRequestException, NotFoundException, InternalServerErrorException } from '../../util/error'
 
 
 @Controller({
@@ -18,11 +19,21 @@ export class FavoController {
         const prisma = new PrismaClient()
         const favoRepo = new FavoRepository(prisma)
         const usecase = new PostFavoUseCase(favoRepo)
-        await usecase.do({
-            token: token,
-            userId: userId,
-            postId: postId,
-        })
+        try {
+            const result = await usecase.do({
+                token: token,
+                userId: userId,
+                postId: postId,
+            })
+            if (result === 'tokenError') {
+                throw new UnauthorizedException();
+            }
+        } catch (e) {
+            if (e.name === 'UnauthorizedException') {
+                throw new UnauthorizedException();
+            }
+            throw new InternalServerErrorException();
+        }
     }
 
     @Delete('/postId/:postId/userId/:userId')
@@ -34,10 +45,20 @@ export class FavoController {
         const prisma = new PrismaClient()
         const favoRepo = new FavoRepository(prisma)
         const usecase = new DeleteFavoUseCase(favoRepo)
-        await usecase.do({
-            token: token,
-            userId: userId,
-            postId: postId,
-        })
+        try {
+            const result = await usecase.do({
+                token: token,
+                userId: userId,
+                postId: postId,
+            })
+            if (result === 'tokenError') {
+                throw new UnauthorizedException();
+            }
+        } catch (e) {
+            if (e.name === 'UnauthorizedException') {
+                throw new UnauthorizedException();
+            }
+            throw new InternalServerErrorException();
+        }
     }
 }

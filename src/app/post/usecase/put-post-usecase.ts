@@ -20,6 +20,9 @@ export class PutPostUseCase {
             text,
         } = params
         await new DomainService().tokenCheck(token);
+        if ('tokenError') {
+            return 'tokenError'
+        }
         const post = await this.postRepo.getPost(postId);
 
         const postEntity = new Post({
