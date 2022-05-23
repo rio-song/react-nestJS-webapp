@@ -11,26 +11,39 @@ export class PostPostUseCase {
     }
 
     public async do(params: { token: string, userId: string, imageUrl: string, title: string, text: string, }) {
-        const {
-            token,
-            userId,
-            imageUrl,
-            title,
-            text,
-        } = params
-        const tokenError = await new DomainService().tokenCheck(token);
-        if (tokenError === 'tokenError') {
-            return 'tokenError'
+        try {
+            if (params.token == null || params.token == undefined || params.token == ""
+                || params.userId == null || params.userId == undefined || params.userId == ""
+                || params.imageUrl == null || params.imageUrl == undefined || params.imageUrl == ""
+                || params.text == null || params.text == undefined || params.text == ""
+                || params.title == null || params.title == undefined || params.title == "") {
+                const e = new Error('notFoundAccount')
+                return Promise.reject(e.message);
+            }
+            const {
+                token,
+                userId,
+                imageUrl,
+                title,
+                text,
+            } = params
+            const tokenError = await new DomainService().tokenCheck(token);
+            if (tokenError === 'tokenError') {
+                return 'tokenError'
+            }
+            const postEntity = new Post({
+                id: createRandomIdString(),
+                imageUrl,
+                title,
+                text,
+                postedAt: new Date(),
+                postedUser: String(Object.values(userId)),
+                createAt: null
+            })
+            await this.postRepo.save(postEntity);
+        } catch (error) {
+            // memo: エラー処理
+            throw error
         }
-        const postEntity = new Post({
-            id: createRandomIdString(),
-            imageUrl,
-            title,
-            text,
-            postedAt: new Date(),
-            postedUser: String(Object.values(userId)),
-            createAt: null
-        })
-        await this.postRepo.save(postEntity);
     }
 }

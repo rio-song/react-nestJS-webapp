@@ -17,29 +17,44 @@ export class PutUserUseCase {
         nickName: string; imageUrl: string; email: string;
         password: string;
     }) {
-        const { token, firstName, familyName, nickName, imageUrl, email, password,
-        } = params
-        const tokenError = await new DomainService().tokenCheck(token);
-        if (tokenError === 'tokenError') {
-            return 'tokenError'
-        }
-        const emailDoubleError = await new DomainService().emailDoubleCheck(email)
-        if (emailDoubleError === 'emailDoubleError') {
-            return 'emailDoubleError'
-        }
+        try {
+            if (params.token == null || params.token == undefined || params.token == ""
+                || params.userId == null || params.userId == undefined || params.userId == ""
+                || params.firstName == null || params.firstName == undefined || params.firstName == ""
+                || params.familyName == null || params.familyName == undefined || params.familyName == ""
+                || params.nickName == null || params.nickName == undefined || params.nickName == ""
+                || params.email == null || params.email == undefined || params.email == ""
+                || params.password == null || params.password == undefined || params.password == "") {
+                const e = new Error('notFoundAccount')
+                return Promise.reject(e.message);
+            }
+            const { token, firstName, familyName, nickName, imageUrl, email, password,
+            } = params
+            const tokenError = await new DomainService().tokenCheck(token);
+            if (tokenError === 'tokenError') {
+                return 'tokenError'
+            }
+            const emailDoubleError = await new DomainService().emailDoubleCheck(email)
+            if (emailDoubleError === 'emailDoubleError') {
+                return 'emailDoubleError'
+            }
 
-        const userEntity = new User({
-            id: createRandomIdString(),
-            firstName: firstName,
-            familyName: familyName,
-            nickName: nickName,
-            imageUrl: imageUrl,
-            email: email,
-            password: password,
-            registeredAt: new Date(),
-            createdAt: null
-        })
-        await this.userRepo.save(userEntity);
-        return userEntity.getAllProperties().id
+            const userEntity = new User({
+                id: createRandomIdString(),
+                firstName: firstName,
+                familyName: familyName,
+                nickName: nickName,
+                imageUrl: imageUrl,
+                email: email,
+                password: password,
+                registeredAt: new Date(),
+                createdAt: null
+            })
+            await this.userRepo.save(userEntity);
+            return userEntity.getAllProperties().id
+        } catch (error) {
+            // memo: エラー処理
+            throw error
+        }
     }
 }

@@ -11,26 +11,39 @@ export class PostCommentUseCase {
     }
 
     public async do(params: { token: string, userId: string, postId: string, comment: string, }) {
-        const {
-            token,
-            userId,
-            postId,
-            comment,
-        } = params
+        try {
+            if (params.token == null || params.token == undefined || params.token == ""
+                || params.userId == null || params.userId == undefined || params.userId == ""
+                || params.postId == null || params.postId == undefined || params.postId == ""
+                || params.comment == null || params.comment == undefined || params.comment == "") {
+                const e = new Error('notFoundAccount')
+                return Promise.reject(e.message);
+            }
 
-        const tokenError = await new DomainService().tokenCheck(token);
-        if (tokenError === 'tokenError') {
-            return 'tokenError'
+            const {
+                token,
+                userId,
+                postId,
+                comment,
+            } = params
+
+            const tokenError = await new DomainService().tokenCheck(token);
+            if (tokenError === 'tokenError') {
+                return 'tokenError'
+            }
+
+            const commentEntity = new Comment({
+                id: createRandomIdString(),
+                commentedUserId: userId,
+                postId,
+                comment,
+                commentedAt: new Date(),
+                createAt: null
+            })
+            await this.commentRepo.save(commentEntity);
+        } catch (error) {
+            // memo: エラー処理
+            throw error
         }
-
-        const commentEntity = new Comment({
-            id: createRandomIdString(),
-            commentedUserId: userId,
-            postId,
-            comment,
-            commentedAt: new Date(),
-            createAt: null
-        })
-        await this.commentRepo.save(commentEntity);
     }
 }
