@@ -14,8 +14,8 @@ export class DeleteFavoUseCase {
             userId,
             postId,
         } = params
-        await new DomainService().tokenCheck(token);
-        if ('tokenError') {
+        const tokenError = await new DomainService().tokenCheck(token);
+        if (tokenError === 'tokenError') {
             return 'tokenError'
         }
         await this.favoRepo.delete(postId, userId);

@@ -9,6 +9,13 @@ export class GetLoginUseCase {
 
     public async do(params: { email: string, password: string }) {
         try {
+            console.log("中身email:" + params.email)
+            console.log("password:" + params.password)
+            if (params.email == null || params.email == undefined || params.email == "") {
+                console.log("エラーか")
+                const e = new Error('notFoundAccount')
+                return Promise.reject(e.message);
+            }
             const userId = await this.loginRepo.getLogin(params.email, params.password);
             const jwt = require("jsonwebtoken");
 

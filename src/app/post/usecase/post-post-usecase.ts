@@ -18,8 +18,8 @@ export class PostPostUseCase {
             title,
             text,
         } = params
-        await new DomainService().tokenCheck(token);
-        if ('tokenError') {
+        const tokenError = await new DomainService().tokenCheck(token);
+        if (tokenError === 'tokenError') {
             return 'tokenError'
         }
         const postEntity = new Post({

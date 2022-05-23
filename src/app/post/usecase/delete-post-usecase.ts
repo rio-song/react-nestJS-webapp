@@ -14,8 +14,8 @@ export class DeletePostUseCase {
             userId,
             postId,
         } = params
-        await new DomainService().tokenCheck(token);
-        if ('tokenError') {
+        const tokenError = await new DomainService().tokenCheck(token);
+        if (tokenError === 'tokenError') {
             return 'tokenError'
         }
         await this.postRepo.delete(postId, userId);

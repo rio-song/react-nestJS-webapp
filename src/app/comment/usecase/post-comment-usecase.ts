@@ -18,8 +18,8 @@ export class PostCommentUseCase {
             comment,
         } = params
 
-        await new DomainService().tokenCheck(token);
-        if ('tokenError') {
+        const tokenError = await new DomainService().tokenCheck(token);
+        if (tokenError === 'tokenError') {
             return 'tokenError'
         }
 

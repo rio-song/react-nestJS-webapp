@@ -8,8 +8,8 @@ export class GetUserUseCase {
     }
     public async do(token: string, userId: string) {
         try {
-            await new DomainService().tokenCheck(token);
-            if ('tokenError') {
+            const tokenError = await new DomainService().tokenCheck(token);
+            if (tokenError === 'tokenError') {
                 return 'tokenError'
             }
             return await this.userQS.getUser(userId)

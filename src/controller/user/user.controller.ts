@@ -60,7 +60,6 @@ export class UserController {
             if (result === 'emailDoubleError') {
                 throw new BadRequestException();
             }
-
             const response = new PostPutUserResponse(result)
             return response
         } catch (e) {

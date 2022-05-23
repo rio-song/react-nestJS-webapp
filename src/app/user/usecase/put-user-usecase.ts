@@ -19,12 +19,12 @@ export class PutUserUseCase {
     }) {
         const { token, firstName, familyName, nickName, imageUrl, email, password,
         } = params
-        await new DomainService().tokenCheck(token);
-        if ('tokenError') {
+        const tokenError = await new DomainService().tokenCheck(token);
+        if (tokenError === 'tokenError') {
             return 'tokenError'
         }
-        await new DomainService().emailDoubleCheck(email) !== null
-        if ('emailDoubleError') {
+        const emailDoubleError = await new DomainService().emailDoubleCheck(email)
+        if (emailDoubleError === 'emailDoubleError') {
             return 'emailDoubleError'
         }
 

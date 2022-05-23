@@ -9,13 +9,17 @@ export class LoginRepository implements ILoginRepository {
     }
 
     public async getLogin(email, password): Promise<string> {
+        console.log("email:" + email)
+        console.log("password:" + password)
         const login = await this.prismaClient.user.findFirst({
             where: {
                 email: email,
                 password: password
             }
         })
+        console.log("login:" + login)
         if (login == null) {
+            console.log("loginきている")
             const e = new Error('notFoundAccount')
             return Promise.reject(e.message);
         }

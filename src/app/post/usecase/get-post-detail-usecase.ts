@@ -8,8 +8,8 @@ export class GetPostDetailUseCase {
     }
     public async do(params: { token: string, postId: string; userId: string }) {
         let { token, postId, userId } = params
-        await new DomainService().tokenCheck(token);
-        if ('tokenError') {
+        const tokenError = await new DomainService().tokenCheck(token);
+        if (tokenError === 'tokenError') {
             return 'tokenError'
         }
         try {
