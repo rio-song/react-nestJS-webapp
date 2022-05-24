@@ -1,4 +1,3 @@
-import { HttpCode } from '@nestjs/common'
 import { ApiProperty } from '@nestjs/swagger'
 import { PostDTO } from 'src/app/post/post-qs-if'
 
@@ -8,7 +7,8 @@ export class GetPostsAllResponse {
 
     public constructor(params: { Posts: PostDTO[] }) {
         const { Posts } = params
-        this.Post = Posts.map(({ id, imageUrl, title, postedAt, favosCount, favoStatus, commentsCount, lastPostId }) => {
+        this.Post = Posts.map(({ id, imageUrl, title, postedAt, favosCount, favoStatus,
+            commentsCount, lastPostId, nickName, userId }) => {
             return new Post({
                 id,
                 imageUrl,
@@ -17,7 +17,9 @@ export class GetPostsAllResponse {
                 favosCount,
                 favoStatus,
                 commentsCount,
-                lastPostId
+                lastPostId,
+                nickName,
+                userId
             })
         })
     }
@@ -35,6 +37,12 @@ class Post {
 
     @ApiProperty()
     postedAt: Date
+
+    @ApiProperty()
+    userId: string
+
+    @ApiProperty()
+    nickName: string
 
     @ApiProperty()
     favosCount: number
@@ -57,6 +65,8 @@ class Post {
         favosCount: number
         commentsCount: number
         lastPostId: string
+        userId: string
+        nickName: string
     }) {
         this.id = params.id
         this.imageUrl = params.imageUrl
@@ -66,5 +76,7 @@ class Post {
         this.favosCount = params.favosCount
         this.commentsCount = params.commentsCount
         this.lastPostId = params.lastPostId
+        this.userId = params.userId
+        this.nickName = params.nickName
     }
 }

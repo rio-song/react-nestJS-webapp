@@ -8,15 +8,18 @@ export class PostDTO {
     public readonly favoStatus: boolean
     public readonly commentsCount: number
     public readonly lastPostId: string
+    public readonly nickName: string
+    public readonly userId: string
 
-    public constructor(props: { id: string; imageUrl: string; title: string; text: string; postedAt: Date; favosCount: number; favoStatus: number; commentsCount: number; lastPostId: string }) {
-        const { id, imageUrl, title, text, postedAt, favosCount, favoStatus, commentsCount, lastPostId } = props
+    public constructor(props: { id: string; imageUrl: string; title: string; text: string; postedAt: Date; favosCount: number; favoStatus: number; commentsCount: number; lastPostId: string; nickName: string; userId: string }) {
+        const { id, imageUrl, title, text, postedAt, favosCount, favoStatus, commentsCount, lastPostId, nickName, userId } = props
         this.id = id
         this.imageUrl = imageUrl
         this.title = title
         this.text = text
         this.postedAt = postedAt
         this.favosCount = favosCount
+        this.userId = userId
         if (favoStatus > 0) {
             this.favoStatus = true
         } else if (favoStatus === 0) {
@@ -26,6 +29,7 @@ export class PostDTO {
         }
         this.commentsCount = commentsCount
         this.lastPostId = lastPostId
+        this.nickName = nickName
     }
 }
 

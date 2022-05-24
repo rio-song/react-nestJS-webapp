@@ -14,6 +14,8 @@ export class GetPostDetailResponse {
             postedAt: PostDetails.postedAt,
             favosCount: PostDetails.favosCount,
             favo: PostDetails.favo,
+            nickName: PostDetails.nickName,
+            userId: PostDetails.userId,
             commentsCount: PostDetails.commentsCount,
             comments: PostDetails.comments.map(({
                 id, comment, commentedUserId, commentededAt
@@ -53,6 +55,12 @@ class PostDetail {
     favo: boolean
 
     @ApiProperty()
+    userId: string
+
+    @ApiProperty()
+    nickName: string
+
+    @ApiProperty()
     commentsCount: number
 
     @ApiProperty({ type: () => [Comment] })
@@ -66,6 +74,8 @@ class PostDetail {
         postedAt: Date
         favosCount: number
         favo: boolean
+        userId: string
+        nickName: string
         commentsCount: number
         comments: Comment[]
     }) {
@@ -76,6 +86,8 @@ class PostDetail {
         this.postedAt = params.postedAt
         this.favo = params.favo
         this.favosCount = params.favosCount
+        this.userId = params.userId
+        this.nickName = params.nickName
         this.commentsCount = params.commentsCount
         this.comments = params.comments
     }

@@ -28,6 +28,11 @@ export class PostQS implements IPostQS {
                         where: {
                             user_id: userId
                         }
+                    },
+                    posted_user: {
+                        include: {
+                            user: {}
+                        }
                     }
                 }
             })
@@ -42,7 +47,9 @@ export class PostQS implements IPostQS {
                         favosCount: postDM._count.favos,
                         favoStatus: postDM.favos.length,
                         commentsCount: postDM._count.comments,
-                        lastPostId: allPosts.slice(-1)[0].id
+                        lastPostId: allPosts.slice(-1)[0].id,
+                        nickName: postDM.posted_user.slice[0].nickName,
+                        userId: postDM.posted_user.slice[0].user_id
                     }),
             )
         } else {
@@ -59,6 +66,11 @@ export class PostQS implements IPostQS {
                         where: {
                             user_id: userId
                         }
+                    },
+                    posted_user: {
+                        include: {
+                            user: {}
+                        }
                     }
                 }
             })
@@ -73,7 +85,9 @@ export class PostQS implements IPostQS {
                         favosCount: postDM._count.favos,
                         favoStatus: postDM.favos.length,
                         commentsCount: postDM._count.comments,
-                        lastPostId: allPosts.slice(-1)[0].id
+                        lastPostId: allPosts.slice(-1)[0].id,
+                        nickName: postDM.posted_user.slice[0].nickName,
+                        userId: postDM.posted_user.slice[0].user_id
                     }),
             )
         }
@@ -93,6 +107,11 @@ export class PostQS implements IPostQS {
                 include: {
                     _count: {
                         select: { favos: true, comments: true },
+                    },
+                    posted_user: {
+                        include: {
+                            user: {}
+                        }
                     }
 
                 }
@@ -108,7 +127,9 @@ export class PostQS implements IPostQS {
                         favosCount: postDM._count.favos,
                         favoStatus: null,
                         commentsCount: postDM._count.comments,
-                        lastPostId: allPosts.slice(-1)[0].id
+                        lastPostId: allPosts.slice(-1)[0].id,
+                        nickName: postDM.posted_user.slice[0].nickName,
+                        userId: postDM.posted_user.slice[0].user_id
                     }),
             )
         } else {
@@ -120,6 +141,11 @@ export class PostQS implements IPostQS {
                 include: {
                     _count: {
                         select: { favos: true, comments: true },
+                    },
+                    posted_user: {
+                        include: {
+                            user: {}
+                        }
                     }
                 }
             })
@@ -134,7 +160,9 @@ export class PostQS implements IPostQS {
                         favosCount: postDM._count.favos,
                         favoStatus: null,
                         commentsCount: postDM._count.comments,
-                        lastPostId: allPosts.slice(-1)[0].id
+                        lastPostId: allPosts.slice(-1)[0].id,
+                        nickName: postDM.posted_user.slice[0].nickName,
+                        userId: postDM.posted_user.slice[0].user_id
                     }),
             )
         }
@@ -177,7 +205,9 @@ export class PostQS implements IPostQS {
                         favosCount: postDM._count.favos,
                         favoStatus: postDM.favos.length,
                         commentsCount: postDM._count.comments,
-                        lastPostId: allPosts.slice(-1)[0].id
+                        lastPostId: allPosts.slice(-1)[0].id,
+                        nickName: postDM.posted_user.slice[0].nickName,
+                        userId: postDM.posted_user.slice[0].user_id
                     }),
             )
         } else {
@@ -212,7 +242,9 @@ export class PostQS implements IPostQS {
                         favosCount: postDM._count.favos,
                         favoStatus: postDM.favos.length,
                         commentsCount: postDM._count.comments,
-                        lastPostId: allPosts.slice(-1)[0].id
+                        lastPostId: allPosts.slice(-1)[0].id,
+                        nickName: postDM.posted_user.slice[0].nickName,
+                        userId: postDM.posted_user.slice[0].user_id
                     }),
             )
         }

@@ -6,11 +6,17 @@ export class PostDetailDTO {
     public readonly postedAt: Date
     public readonly favosCount: number
     public readonly favo: boolean
+    public readonly nickName: string
+    public readonly userId: string
     public readonly commentsCount: number
     public readonly comments: CommentDTO[]
 
-    public constructor(props: { id: string; imageUrl: string; title: string; text: string; postedAt: Date; favosCount: number; favo: boolean; commentsCount: number; comments: CommentDTO[]; }) {
-        const { id, imageUrl, title, text, postedAt, favosCount, favo, commentsCount, comments } = props
+    public constructor(props: {
+        id: string; imageUrl: string; title: string; text: string; postedAt: Date; favosCount: number; favo: boolean;
+        nickName: string; userId: string; commentsCount: number; comments: CommentDTO[];
+    }) {
+        const { id, imageUrl, title, text, postedAt, nickName, userId,
+            favosCount, favo, commentsCount, comments } = props
         this.id = id
         this.imageUrl = imageUrl
         this.title = title
@@ -20,6 +26,8 @@ export class PostDetailDTO {
         this.favo = favo
         this.commentsCount = commentsCount
         this.comments = comments
+        this.nickName = nickName
+        this.userId = userId
     }
 }
 

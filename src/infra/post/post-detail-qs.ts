@@ -23,6 +23,11 @@ export class PostDetailQS implements IPostDetailQS {
                 favos: {
                     where: { user_id: userId }
                 },
+                posted_user: {
+                    include: {
+                        user: {}
+                    }
+                }
             }
         })
 
@@ -39,6 +44,8 @@ export class PostDetailQS implements IPostDetailQS {
             postedAt: allPostDetail.posted_at,
             favosCount: allPostDetail._count.favos,
             favo: favoStatus,
+            nickName: allPostDetail.posted_user.slice[0].user.nickName,
+            userId: allPostDetail.posted_user.slice[0].user_id,
             commentsCount: allPostDetail._count.comments,
             comments: allPostDetail.comments.map((c) => new CommentDTO({
                 id: c.id,
