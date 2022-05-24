@@ -31,11 +31,12 @@ export class PostQS implements IPostQS {
                     },
                     posted_user: {
                         include: {
-                            user: {}
+                            user: true
                         }
                     }
                 }
             })
+            console.log("Post2")
             return allPosts.map(
                 (postDM) =>
                     new PostDTO({
@@ -48,8 +49,8 @@ export class PostQS implements IPostQS {
                         favoStatus: postDM.favos.length,
                         commentsCount: postDM._count.comments,
                         lastPostId: allPosts.slice(-1)[0].id,
-                        nickName: postDM.posted_user.slice[0].nickName,
-                        userId: postDM.posted_user.slice[0].user_id
+                        nickName: postDM.posted_user[0].user.nick_name,
+                        userId: postDM.posted_user[0].user.id
                     }),
             )
         } else {
@@ -69,7 +70,7 @@ export class PostQS implements IPostQS {
                     },
                     posted_user: {
                         include: {
-                            user: {}
+                            user: true
                         }
                     }
                 }
@@ -86,8 +87,8 @@ export class PostQS implements IPostQS {
                         favoStatus: postDM.favos.length,
                         commentsCount: postDM._count.comments,
                         lastPostId: allPosts.slice(-1)[0].id,
-                        nickName: postDM.posted_user.slice[0].nickName,
-                        userId: postDM.posted_user.slice[0].user_id
+                        nickName: postDM.posted_user[0].user.nick_name,
+                        userId: postDM.posted_user[0].user.id
                     }),
             )
         }
@@ -110,7 +111,7 @@ export class PostQS implements IPostQS {
                     },
                     posted_user: {
                         include: {
-                            user: {}
+                            user: true
                         }
                     }
 
@@ -128,8 +129,8 @@ export class PostQS implements IPostQS {
                         favoStatus: null,
                         commentsCount: postDM._count.comments,
                         lastPostId: allPosts.slice(-1)[0].id,
-                        nickName: postDM.posted_user.slice[0].nickName,
-                        userId: postDM.posted_user.slice[0].user_id
+                        nickName: postDM.posted_user[0].user.nick_name,
+                        userId: postDM.posted_user[0].user.id
                     }),
             )
         } else {
@@ -144,7 +145,7 @@ export class PostQS implements IPostQS {
                     },
                     posted_user: {
                         include: {
-                            user: {}
+                            user: true
                         }
                     }
                 }
@@ -161,8 +162,8 @@ export class PostQS implements IPostQS {
                         favoStatus: null,
                         commentsCount: postDM._count.comments,
                         lastPostId: allPosts.slice(-1)[0].id,
-                        nickName: postDM.posted_user.slice[0].nickName,
-                        userId: postDM.posted_user.slice[0].user_id
+                        nickName: postDM.posted_user[0].user.nick_name,
+                        userId: postDM.posted_user[0].user.id
                     }),
             )
         }
@@ -183,6 +184,8 @@ export class PostQS implements IPostQS {
                     posted_user: {
                         where: {
                             user_id: userId
+                        }, include: {
+                            user: true
                         }
                     },
                     _count: {
@@ -206,8 +209,8 @@ export class PostQS implements IPostQS {
                         favoStatus: postDM.favos.length,
                         commentsCount: postDM._count.comments,
                         lastPostId: allPosts.slice(-1)[0].id,
-                        nickName: postDM.posted_user.slice[0].nickName,
-                        userId: postDM.posted_user.slice[0].user_id
+                        nickName: postDM.posted_user[0].user.nick_name,
+                        userId: postDM.posted_user[0].user.id
                     }),
             )
         } else {
@@ -220,6 +223,8 @@ export class PostQS implements IPostQS {
                     posted_user: {
                         where: {
                             user_id: userId
+                        }, include: {
+                            user: true
                         }
                     },
                     _count: {
@@ -243,8 +248,8 @@ export class PostQS implements IPostQS {
                         favoStatus: postDM.favos.length,
                         commentsCount: postDM._count.comments,
                         lastPostId: allPosts.slice(-1)[0].id,
-                        nickName: postDM.posted_user.slice[0].nickName,
-                        userId: postDM.posted_user.slice[0].user_id
+                        nickName: postDM.posted_user[0].user.nick_name,
+                        userId: postDM.posted_user[0].user.id
                     }),
             )
         }

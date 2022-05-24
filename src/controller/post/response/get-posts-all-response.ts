@@ -18,8 +18,8 @@ export class GetPostsAllResponse {
                 favoStatus,
                 commentsCount,
                 lastPostId,
+                userId,
                 nickName,
-                userId
             })
         })
     }
@@ -39,12 +39,6 @@ class Post {
     postedAt: Date
 
     @ApiProperty()
-    userId: string
-
-    @ApiProperty()
-    nickName: string
-
-    @ApiProperty()
     favosCount: number
 
     @ApiProperty()
@@ -55,6 +49,12 @@ class Post {
 
     @ApiProperty()
     lastPostId: string
+
+    @ApiProperty()
+    userId: string
+
+    @ApiProperty()
+    nickName: string
 
     public constructor(params: {
         id: string
