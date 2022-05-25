@@ -8,7 +8,7 @@ export class GetPostsAllResponse {
     public constructor(params: { Posts: PostDTO[] }) {
         const { Posts } = params
         this.Post = Posts.map(({ id, imageUrl, title, postedAt, favosCount, favoStatus,
-            commentsCount, lastPostId, nickName, userId }) => {
+            commentsCount, lastPostId, nickName, userId, userImageUrl }) => {
             return new Post({
                 id,
                 imageUrl,
@@ -20,6 +20,7 @@ export class GetPostsAllResponse {
                 lastPostId,
                 userId,
                 nickName,
+                userImageUrl,
             })
         })
     }
@@ -56,6 +57,9 @@ class Post {
     @ApiProperty()
     nickName: string
 
+    @ApiProperty()
+    userImageUrl: string
+
     public constructor(params: {
         id: string
         imageUrl: string
@@ -67,6 +71,7 @@ class Post {
         lastPostId: string
         userId: string
         nickName: string
+        userImageUrl: string
     }) {
         this.id = params.id
         this.imageUrl = params.imageUrl
@@ -78,5 +83,6 @@ class Post {
         this.lastPostId = params.lastPostId
         this.userId = params.userId
         this.nickName = params.nickName
+        this.userImageUrl = params.userImageUrl
     }
 }

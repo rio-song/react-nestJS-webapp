@@ -10,9 +10,15 @@ export class PostDTO {
     public readonly lastPostId: string
     public readonly nickName: string
     public readonly userId: string
+    public readonly userImageUrl: string
 
-    public constructor(props: { id: string; imageUrl: string; title: string; text: string; postedAt: Date; favosCount: number; favoStatus: number; commentsCount: number; lastPostId: string; nickName: string; userId: string }) {
-        const { id, imageUrl, title, text, postedAt, favosCount, favoStatus, commentsCount, lastPostId, nickName, userId } = props
+    public constructor(props: {
+        id: string; imageUrl: string; title: string; text: string; postedAt: Date;
+        favosCount: number; favoStatus: number; commentsCount: number; lastPostId: string;
+        nickName: string; userId: string; userImageUrl: string
+    }) {
+        const { id, imageUrl, title, text, postedAt, favosCount, favoStatus, commentsCount,
+            lastPostId, nickName, userId, userImageUrl } = props
         this.id = id
         this.imageUrl = imageUrl
         this.title = title
@@ -20,6 +26,7 @@ export class PostDTO {
         this.postedAt = postedAt
         this.favosCount = favosCount
         this.userId = userId
+        this.userImageUrl = userImageUrl
         if (favoStatus > 0) {
             this.favoStatus = true
         } else if (favoStatus === 0) {

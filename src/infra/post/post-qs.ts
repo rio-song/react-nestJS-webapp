@@ -50,7 +50,8 @@ export class PostQS implements IPostQS {
                         commentsCount: postDM._count.comments,
                         lastPostId: allPosts.slice(-1)[0].id,
                         nickName: postDM.posted_user[0].user.nick_name,
-                        userId: postDM.posted_user[0].user.id
+                        userId: postDM.posted_user[0].user.id,
+                        userImageUrl: postDM.posted_user[0].user.user_img_url,
                     }),
             )
         } else {
@@ -88,7 +89,8 @@ export class PostQS implements IPostQS {
                         commentsCount: postDM._count.comments,
                         lastPostId: allPosts.slice(-1)[0].id,
                         nickName: postDM.posted_user[0].user.nick_name,
-                        userId: postDM.posted_user[0].user.id
+                        userId: postDM.posted_user[0].user.id,
+                        userImageUrl: postDM.posted_user[0].user.user_img_url,
                     }),
             )
         }
@@ -130,7 +132,8 @@ export class PostQS implements IPostQS {
                         commentsCount: postDM._count.comments,
                         lastPostId: allPosts.slice(-1)[0].id,
                         nickName: postDM.posted_user[0].user.nick_name,
-                        userId: postDM.posted_user[0].user.id
+                        userId: postDM.posted_user[0].user.id,
+                        userImageUrl: postDM.posted_user[0].user.user_img_url,
                     }),
             )
         } else {
@@ -163,7 +166,8 @@ export class PostQS implements IPostQS {
                         commentsCount: postDM._count.comments,
                         lastPostId: allPosts.slice(-1)[0].id,
                         nickName: postDM.posted_user[0].user.nick_name,
-                        userId: postDM.posted_user[0].user.id
+                        userId: postDM.posted_user[0].user.id,
+                        userImageUrl: postDM.posted_user[0].user.user_img_url,
                     }),
             )
         }
@@ -210,7 +214,8 @@ export class PostQS implements IPostQS {
                         commentsCount: postDM._count.comments,
                         lastPostId: allPosts.slice(-1)[0].id,
                         nickName: postDM.posted_user[0].user.nick_name,
-                        userId: postDM.posted_user[0].user.id
+                        userId: postDM.posted_user[0].user.id,
+                        userImageUrl: postDM.posted_user[0].user.user_img_url,
                     }),
             )
         } else {
@@ -249,7 +254,8 @@ export class PostQS implements IPostQS {
                         commentsCount: postDM._count.comments,
                         lastPostId: allPosts.slice(-1)[0].id,
                         nickName: postDM.posted_user[0].user.nick_name,
-                        userId: postDM.posted_user[0].user.id
+                        userId: postDM.posted_user[0].user.id,
+                        userImageUrl: postDM.posted_user[0].user.user_img_url,
                     }),
             )
         }

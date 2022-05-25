@@ -46,6 +46,7 @@ export class PostDetailQS implements IPostDetailQS {
             favo: favoStatus,
             nickName: allPostDetail.posted_user[0].user.nick_name,
             userId: allPostDetail.posted_user[0].user_id,
+            userImageUrl: allPostDetail.posted_user[0].user.user_img_url,
             commentsCount: allPostDetail._count.comments,
             comments: allPostDetail.comments.map((c) => new CommentDTO({
                 id: c.id,

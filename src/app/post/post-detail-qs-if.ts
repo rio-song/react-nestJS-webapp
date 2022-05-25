@@ -8,14 +8,15 @@ export class PostDetailDTO {
     public readonly favo: boolean
     public readonly nickName: string
     public readonly userId: string
+    public readonly userImageUrl: string
     public readonly commentsCount: number
     public readonly comments: CommentDTO[]
 
     public constructor(props: {
         id: string; imageUrl: string; title: string; text: string; postedAt: Date; favosCount: number; favo: boolean;
-        nickName: string; userId: string; commentsCount: number; comments: CommentDTO[];
+        nickName: string; userId: string; userImageUrl: string; commentsCount: number; comments: CommentDTO[];
     }) {
-        const { id, imageUrl, title, text, postedAt, nickName, userId,
+        const { id, imageUrl, title, text, postedAt, nickName, userId, userImageUrl,
             favosCount, favo, commentsCount, comments } = props
         this.id = id
         this.imageUrl = imageUrl
@@ -28,6 +29,7 @@ export class PostDetailDTO {
         this.comments = comments
         this.nickName = nickName
         this.userId = userId
+        this.userImageUrl = userImageUrl
     }
 }
 
