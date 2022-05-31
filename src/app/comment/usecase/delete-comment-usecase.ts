@@ -8,12 +8,10 @@ export class DeletCommentUseCase {
         this.commentRepo = commentRepo
     }
 
-    public async do(params: { token: string, userId: string, postId: string, commentId: string }) {
+    public async do(params: { token: string, commentId: string }) {
 
         const {
             token,
-            userId,
-            postId,
             commentId
         } = params
         const tokenError = await new DomainService().tokenCheck(token);
@@ -21,7 +19,7 @@ export class DeletCommentUseCase {
             return 'tokenError'
         }
 
-        await this.commentRepo.delete(postId, userId, commentId);
+        await this.commentRepo.delete(commentId);
 
     }
 }

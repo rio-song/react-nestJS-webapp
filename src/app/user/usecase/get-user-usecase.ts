@@ -6,7 +6,12 @@ export class GetUserUseCase {
     public constructor(userQS: IUserQS) {
         this.userQS = userQS
     }
-    public async do(token: string, userId: string) {
+    public async do(params: { token: string, userId: string }) {
+        let {
+            token,
+            userId,
+        } = params
+
         try {
             const tokenError = await new DomainService().tokenCheck(token);
             if (tokenError === 'tokenError') {

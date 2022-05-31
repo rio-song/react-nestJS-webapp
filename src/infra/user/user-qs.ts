@@ -12,7 +12,9 @@ export class UserQS implements IUserQS {
 
     public async getUser(userId): Promise<UserDTO> {
         const user = await this.prismaClient.user.findUnique({
-            where: userId
+            where: {
+                id: userId
+            }
         })
         return new UserDTO({
             id: user.id,
@@ -20,6 +22,7 @@ export class UserQS implements IUserQS {
             familyName: user.family_name,
             nickName: user.nick_name,
             imageUrl: user.user_img_url,
+            profileText: user.profile_text,
             email: user.email,
             password: user.password,
             registeredAt: user.registered_at,

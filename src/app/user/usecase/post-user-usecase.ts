@@ -2,6 +2,7 @@ import { User } from 'src/domain/entity/user'
 import { createRandomIdString } from 'src/util/random'
 import { IUserRepository } from 'src/domain/repository-interface/user-repository'
 import { DomainService } from 'src/domain/domain-service/domain-service'
+import { parseConfigFileTextToJson } from 'typescript'
 
 export class PostUserUseCase {
     private readonly userRepo: IUserRepository
@@ -36,6 +37,7 @@ export class PostUserUseCase {
                 familyName: familyName,
                 nickName: nickName,
                 imageUrl: imageUrl,
+                profileText: "",
                 email: email,
                 password: password,
                 registeredAt: new Date(),

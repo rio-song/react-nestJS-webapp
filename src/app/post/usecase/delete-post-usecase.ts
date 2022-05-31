@@ -8,17 +8,16 @@ export class DeletePostUseCase {
         this.postRepo = postRepo
     }
 
-    public async do(params: { token: string, userId: string, postId: string }) {
+    public async do(params: { token: string, postId: string }) {
         const {
             token,
-            userId,
             postId,
         } = params
         const tokenError = await new DomainService().tokenCheck(token);
         if (tokenError === 'tokenError') {
             return 'tokenError'
         }
-        await this.postRepo.delete(postId, userId);
+        await this.postRepo.delete(postId);
 
     }
 }

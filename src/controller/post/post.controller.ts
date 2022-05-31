@@ -51,27 +51,21 @@ export class PostController {
     async getUserAllPosts(
         @Body() getAllPostsDto: GetPostsAllRequest,
         @Param() param,
-        @Headers('token') token: string,
+        @Headers('token') token: string | null,
     ): Promise<GetPostsAllResponse> {
         const prisma = new PrismaClient()
         const qs = new PostQS(prisma)
         const usecase = new GetPostsUserAllUseCase(qs)
         try {
             const result = await usecase.do({
-                token: token,
+                _token: token,
                 userId: param.userId,
                 count: getAllPostsDto.count,
                 lastPostId: getAllPostsDto.lastPostId
             })
-            if (result === 'tokenError') {
-                throw new UnauthorizedException();
-            }
             const response = new GetPostsAllResponse({ Posts: result })
             return response
         } catch (e) {
-            if (e.name === 'UnauthorizedException') {
-                throw new UnauthorizedException();
-            }
             throw new InternalServerErrorException();
         }
     }
@@ -163,9 +157,8 @@ export class PostController {
     }
 
 
-    @Delete('/userId/:userId/postId/:postId')
+    @Delete('/postId/:postId')
     async deletePost(
-        @Param('userId') userId: string,
         @Param('postId') postId: string,
         @Headers('token') token: string,
     ): Promise<void> {
@@ -175,7 +168,6 @@ export class PostController {
         try {
             const result = await usecase.do({
                 token: token,
-                userId: userId,
                 postId: postId
             })
             if (result === 'tokenError') {

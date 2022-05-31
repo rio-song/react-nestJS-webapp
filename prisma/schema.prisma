@@ -17,6 +17,7 @@ model User {
   family_name   String
   nick_name     String
   user_img_url  String
+  profile_text  String
   email         String
   password      String
   registered_at DateTime

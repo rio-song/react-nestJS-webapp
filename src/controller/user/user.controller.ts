@@ -17,14 +17,17 @@ import { UnauthorizedException, BadRequestException, NotFoundException, Internal
 export class UserController {
     @Get('/userId/:userId')
     async getUser(
-        @Param() userId: string,
+        @Param() param,
         @Headers('token') token: string,
     ): Promise<GetUserResponse> {
         const prisma = new PrismaClient()
         const qs = new UserQS(prisma)
         const usecase = new GetUserUseCase(qs)
         try {
-            const result = await usecase.do(userId, token)
+            const result = await usecase.do({
+                token: token,
+                userId: param.userId
+            })
             if (result === 'tokenError') {
                 throw new UnauthorizedException();
             }
@@ -91,6 +94,7 @@ export class UserController {
                 familyName: putUserDto.familyName,
                 nickName: putUserDto.nickName,
                 imageUrl: putUserDto.imageUrl,
+                profileText: putUserDto.profileText,
                 email: putUserDto.email,
                 password: putUserDto.password,
             })

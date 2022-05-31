@@ -12,13 +12,11 @@ export class PostDetailQS implements IPostDetailQS {
     }
 
     public async getPostDetail(postId: string, userId: string): Promise<PostDetailDTO> {
-
         const allPostDetail = await this.prismaClient.post.findUnique({
             where: {
                 id: postId
             },
             include: {
-                comments: true,
                 _count: true,
                 favos: {
                     where: { user_id: userId }
@@ -27,7 +25,12 @@ export class PostDetailQS implements IPostDetailQS {
                     include: {
                         user: true
                     }
-                }
+                },
+                comments: {
+                    include: {
+                        user: true
+                    }
+                },
             }
         })
 
@@ -53,6 +56,8 @@ export class PostDetailQS implements IPostDetailQS {
                 comment: c.comment,
                 commentedUserId: c.user_id,
                 commentededAt: c.commented_at,
+                commentedUserImageUrl: c.user.user_img_url,
+                commentedUserNickName: c.user.nick_name
             }))
         })
 

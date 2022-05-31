@@ -13,7 +13,7 @@ export class GetUserResponse {
             nickName: Users.nickName,
             imageUrl: Users.imageUrl,
             email: Users.email,
-            password: Users.password,
+            profileText: Users.password,
             registeredAt: Users.registeredAt,
         })
     }
@@ -39,7 +39,7 @@ class User {
     email: string
 
     @ApiProperty()
-    password: string
+    profileText: string
 
     @ApiProperty()
     registeredAt: Date
@@ -51,7 +51,7 @@ class User {
         nickName: string
         imageUrl: string
         email: string
-        password: string
+        profileText: string
         registeredAt: Date
     }) {
         this.id = params.id
@@ -61,7 +61,6 @@ class User {
         this.imageUrl = params.imageUrl
         this.nickName = params.nickName
         this.email = params.email
-        this.password = params.password
         this.registeredAt = params.registeredAt
     }
 }

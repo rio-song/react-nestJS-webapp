@@ -9,7 +9,7 @@ export class UserRepository implements IUserRepository {
     }
 
     public async save(userEntity: User): Promise<User> {
-        const { id, firstName, familyName, nickName, imageUrl, email, password,
+        const { id, firstName, familyName, nickName, imageUrl, profileText, email, password,
             registeredAt } = userEntity.getAllProperties()
         await this.prismaClient.user.create({
             data: {
@@ -18,6 +18,7 @@ export class UserRepository implements IUserRepository {
                 family_name: familyName,
                 nick_name: nickName,
                 user_img_url: imageUrl != null ? imageUrl : undefined,
+                profile_text: profileText,
                 email: email,
                 password: password,
                 registered_at: registeredAt,
@@ -41,6 +42,7 @@ export class UserRepository implements IUserRepository {
             familyName: user.family_name,
             nickName: user.nick_name,
             imageUrl: user.user_img_url,
+            profileText: user.profile_text,
             email: user.email,
             password: user.password,
             registeredAt: user.registered_at,
@@ -51,7 +53,7 @@ export class UserRepository implements IUserRepository {
     }
 
     public async update(userEntity: User): Promise<User> {
-        const { id, firstName, familyName, nickName, imageUrl, email, password,
+        const { id, firstName, familyName, nickName, imageUrl, profileText, email, password,
             registeredAt, createdAt } = userEntity.getAllProperties()
 
         await this.prismaClient.$transaction(async (prismaClient) => {
@@ -69,6 +71,7 @@ export class UserRepository implements IUserRepository {
                     family_name: familyName,
                     nick_name: nickName,
                     user_img_url: imageUrl,
+                    profile_text: profileText,
                     email: email,
                     password: password,
                     registered_at: registeredAt,

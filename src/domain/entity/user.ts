@@ -5,17 +5,18 @@ export class User {
     private familyName: string
     private nickName: string
     private imageUrl: string | null
-    private email: string
     private password: string
+    private email: string
+    private profileText: string | null
     private registeredAt: Date
     private createdAt: Date | null
 
     public constructor(props: {
         id: string; firstName: string; familyName: string;
-        nickName: string; imageUrl: string | null; email: string;
+        nickName: string; imageUrl: string | null; profileText: string; email: string;
         password: string; registeredAt: Date; createdAt: Date | null;
     }) {
-        const { id, firstName, familyName, nickName, imageUrl, email, password,
+        const { id, firstName, familyName, nickName, imageUrl, profileText, email, password,
             registeredAt, createdAt, } = props
         this.id = id
         this.firstName = firstName
@@ -26,6 +27,7 @@ export class User {
         this.password = password
         this.registeredAt = registeredAt
         this.createdAt = createdAt
+        this.profileText = profileText
     }
 
     public getAllProperties() {
@@ -35,6 +37,7 @@ export class User {
             familyName: this.familyName,
             nickName: this.nickName,
             imageUrl: this.imageUrl,
+            profileText: this.profileText,
             email: this.email,
             password: this.password,
             registeredAt: this.registeredAt,

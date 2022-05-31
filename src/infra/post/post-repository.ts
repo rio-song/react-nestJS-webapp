@@ -96,19 +96,31 @@ export class PostRepository implements IPostRepository {
         return postEntity;
     }
 
-    public async delete(postId: string, userId: string): Promise<boolean> {
+    public async delete(postId: string): Promise<boolean> {
 
         await this.prismaClient.$transaction(async (prismaClient) => {
 
-            await this.prismaClient.post.delete({
-                where: {
-                    id: postId
-                },
-            })
             await this.prismaClient.postedUser.deleteMany({
                 where: {
                     post_id: postId,
-                    user_id: userId
+                }
+            })
+
+            await this.prismaClient.comments.deleteMany({
+                where: {
+                    post_id: postId,
+                }
+            })
+
+            await this.prismaClient.favos.deleteMany({
+                where: {
+                    post_id: postId,
+                }
+            })
+
+            await this.prismaClient.post.deleteMany({
+                where: {
+                    id: postId
                 },
             })
         })

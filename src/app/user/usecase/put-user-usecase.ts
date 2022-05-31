@@ -14,7 +14,7 @@ export class PutUserUseCase {
         token: string,
         userId: string;
         firstName: string; familyName: string;
-        nickName: string; imageUrl: string; email: string;
+        nickName: string; imageUrl: string; profileText: string | null; email: string;
         password: string;
     }) {
         try {
@@ -28,7 +28,7 @@ export class PutUserUseCase {
                 const e = new Error('notFoundAccount')
                 return Promise.reject(e.message);
             }
-            const { token, firstName, familyName, nickName, imageUrl, email, password,
+            const { token, firstName, familyName, nickName, imageUrl, profileText, email, password,
             } = params
             const tokenError = await new DomainService().tokenCheck(token);
             if (tokenError === 'tokenError') {
@@ -45,6 +45,7 @@ export class PutUserUseCase {
                 familyName: familyName,
                 nickName: nickName,
                 imageUrl: imageUrl,
+                profileText: profileText,
                 email: email,
                 password: password,
                 registeredAt: new Date(),

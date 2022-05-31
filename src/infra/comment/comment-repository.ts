@@ -43,34 +43,33 @@ export class CommentRepository implements ICommentRepository {
         return postEntity;
     }
 
-    public async update(commentEntity: Comment): Promise<Comment> {
-        const { id, commentedUserId, postId, comment, commentedAt, createAt } = commentEntity.getAllProperties()
+    // public async update(commentEntity: Comment): Promise<Comment> {
+    //     const { id, commentedUserId, postId, comment, commentedAt, createAt } = commentEntity.getAllProperties()
 
-        await this.prismaClient.$transaction(async (prismaClient) => {
+    //     await this.prismaClient.$transaction(async (prismaClient) => {
 
-            await this.prismaClient.comments.delete({
-                where: {
-                    id: id
-                },
-            })
-            await this.prismaClient.comments.create({
-                data: {
-                    id: id,
-                    user_id: commentedUserId,
-                    post_id: postId,
-                    comment: comment,
-                    commented_at: commentedAt,
-                    created_at: createAt,
-                    updated_at: new Date(),
-                }
-            })
-        })
-        return commentEntity;
+    //         await this.prismaClient.comments.delete({
+    //             where: {
+    //                 id: id
+    //             },
+    //         })
+    //         await this.prismaClient.comments.create({
+    //             data: {
+    //                 id: id,
+    //                 user_id: commentedUserId,
+    //                 post_id: postId,
+    //                 comment: comment,
+    //                 commented_at: commentedAt,
+    //                 created_at: createAt,
+    //                 updated_at: new Date(),
+    //             }
+    //         })
+    //     })
+    //     return commentEntity;
 
-    }
+    // }
 
-    public async delete(postId: string, userId: string, commentId: string): Promise<boolean> {
-
+    public async delete(commentId: string): Promise<boolean> {
         await this.prismaClient.comments.delete({
             where: {
                 id: commentId

@@ -24,6 +24,10 @@ export class PutUserRequest {
 
     @ApiProperty()
     @IsNotEmpty()
+    readonly profileText!: string
+
+    @ApiProperty()
+    @IsNotEmpty()
     readonly email!: string
 
     @ApiProperty()

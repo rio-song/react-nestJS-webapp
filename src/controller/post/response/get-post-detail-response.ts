@@ -19,13 +19,15 @@ export class GetPostDetailResponse {
             userImageUrl: PostDetails.userImageUrl,
             commentsCount: PostDetails.commentsCount,
             comments: PostDetails.comments.map(({
-                id, comment, commentedUserId, commentededAt
+                id, comment, commentedUserId, commentededAt, commentedUserImageUrl, commentedUserNickName
             }) => {
                 return new Comment({
                     id,
                     comment,
                     commentedUserId,
-                    commentededAt
+                    commentededAt,
+                    commentedUserImageUrl,
+                    commentedUserNickName
                 })
             })
         })
@@ -111,19 +113,28 @@ class Comment {
     commentedUserId: string
 
     @ApiProperty()
+    commentedUserImageUrl: string
+
+    @ApiProperty()
+    commentedUserNickName: string
+
+    @ApiProperty()
     commentededAt: Date
 
     public constructor(params: {
         id: string
         comment: string
         commentedUserId: string
+        commentedUserImageUrl: string
+        commentedUserNickName: string
         commentededAt: Date
     }) {
         this.id = params.id
         this.comment = params.comment
         this.commentedUserId = params.commentedUserId
         this.commentededAt = params.commentededAt
-
+        this.commentedUserImageUrl = params.commentedUserImageUrl
+        this.commentedUserNickName = params.commentedUserNickName
     }
 }
 
