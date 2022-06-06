@@ -178,203 +178,106 @@ export class PostQS implements IPostQS {
         }
     }
 
-    public async getPostsUserAll(_token: string, userId: string, count: number, lastPostId: string | null): Promise<PostDTO[]> {
+    public async getPostsUserAll(userId: string, count: number, lastPostId: string | null): Promise<PostDTO[]> {
 
-        if (_token === null || _token === undefined || _token === '') {
-            if (lastPostId != null) {
-                const allPosts = await this.prismaClient.post.findMany({
-                    take: count,
-                    skip: 1,
-                    cursor: {
-                        id: lastPostId
-                    },
-                    orderBy: {
-                        posted_at: 'desc',
-                    },
-                    where: {
-                        posted_user: {
-                            some: {
-                                user_id: userId
-                            },
-                        },
-                    }, include: {
-                        posted_user: {
-                            include: {
-                                user: true
-                            }
-                        },
-                        _count: {
-                            select: { favos: true, comments: true },
-                        }
-                    }
-                })
-
-                return allPosts.map(
-                    (postDM) =>
-                        new PostDTO({
-                            id: postDM.id,
-                            imageUrl: postDM.image_url,
-                            title: postDM.title,
-                            text: postDM.text,
-                            postedAt: postDM.posted_at,
-                            favosCount: postDM._count.favos,
-                            favoStatus: null,
-                            commentsCount: postDM._count.comments,
-                            lastPostId: allPosts.slice(-1)[0].id,
-                            nickName: postDM.posted_user[0].user.nick_name,
-                            userId: postDM.posted_user[0].user_id,
-                            userImageUrl: postDM.posted_user[0].user.user_img_url,
-                            textProfile: postDM.posted_user[0].user.profile_text
-                        }),
-                )
-            } else {
-                const allPosts = await this.prismaClient.post.findMany({
-                    take: count,
-                    orderBy: {
-                        posted_at: 'desc',
-                    },
-                    where: {
-                        posted_user: {
-                            some: {
-                                user_id: userId
-                            },
-                        },
-                    }, include: {
-                        posted_user: {
-                            include: {
-                                user: true
-                            }
-                        },
-                        _count: {
-                            select: { favos: true, comments: true },
-                        }
-                    }
-                })
-
-                return allPosts.map(
-                    (postDM) =>
-                        new PostDTO({
-                            id: postDM.id,
-                            imageUrl: postDM.image_url,
-                            title: postDM.title,
-                            text: postDM.text,
-                            postedAt: postDM.posted_at,
-                            favosCount: postDM._count.favos,
-                            favoStatus: null,
-                            commentsCount: postDM._count.comments,
-                            lastPostId: allPosts.slice(-1)[0].id,
-                            nickName: postDM.posted_user[0].user.nick_name,
-                            userId: postDM.posted_user[0].user_id,
-                            userImageUrl: postDM.posted_user[0].user.user_img_url,
-                            textProfile: postDM.posted_user[0].user.profile_text
-                        }))
-            }
-        } else {
-
-            const loginUser = await this.prismaClient.login.findFirst({
+        if (lastPostId != null) {
+            const allPosts = await this.prismaClient.post.findMany({
+                take: count,
+                skip: 1,
+                cursor: {
+                    id: lastPostId
+                },
+                orderBy: {
+                    posted_at: 'desc',
+                },
                 where: {
-                    token: _token
+                    posted_user: {
+                        some: {
+                            user_id: userId
+                        },
+                    },
+                }, include: {
+                    posted_user: {
+                        include: {
+                            user: true
+                        }
+                    },
+                    _count: {
+                        select: { favos: true, comments: true },
+                    },
+                    favos: {
+                        where: {
+                            user_id: userId
+                        }
+                    }
                 }
             })
-            if (lastPostId != null) {
-                const allPosts = await this.prismaClient.post.findMany({
-                    take: count,
-                    skip: 1,
-                    cursor: {
-                        id: lastPostId
+
+            return allPosts.map(
+                (postDM) =>
+                    new PostDTO({
+                        id: postDM.id,
+                        imageUrl: postDM.image_url,
+                        title: postDM.title,
+                        text: postDM.text,
+                        postedAt: postDM.posted_at,
+                        favosCount: postDM._count.favos,
+                        favoStatus: postDM.favos.length,
+                        commentsCount: postDM._count.comments,
+                        lastPostId: allPosts.slice(-1)[0].id,
+                        nickName: postDM.posted_user[0].user.nick_name,
+                        userId: postDM.posted_user[0].user_id,
+                        userImageUrl: postDM.posted_user[0].user.user_img_url,
+                        textProfile: postDM.posted_user[0].user.profile_text
+                    }),
+            )
+        } else {
+            const allPosts = await this.prismaClient.post.findMany({
+                take: count,
+                orderBy: {
+                    posted_at: 'desc',
+                },
+                where: {
+                    posted_user: {
+                        some: {
+                            user_id: userId
+                        },
                     },
-                    orderBy: {
-                        posted_at: 'desc',
+                }, include: {
+                    posted_user: {
+                        include: {
+                            user: true
+                        }
                     },
-                    where: {
-                        posted_user: {
-                            some: {
-                                user_id: userId
-                            },
-                        },
-                    }, include: {
-                        posted_user: {
-                            include: {
-                                user: true
-                            }
-                        },
-                        _count: {
-                            select: { favos: true, comments: true },
-                        },
-                        favos: {
-                            where: {
-                                user_id: loginUser.user_id
-                            }
+                    _count: {
+                        select: { favos: true, comments: true },
+                    },
+                    favos: {
+                        where: {
+                            user_id: userId
                         }
                     }
-                })
+                }
+            })
 
-                return allPosts.map(
-                    (postDM) =>
-                        new PostDTO({
-                            id: postDM.id,
-                            imageUrl: postDM.image_url,
-                            title: postDM.title,
-                            text: postDM.text,
-                            postedAt: postDM.posted_at,
-                            favosCount: postDM._count.favos,
-                            favoStatus: postDM.favos.length,
-                            commentsCount: postDM._count.comments,
-                            lastPostId: allPosts.slice(-1)[0].id,
-                            nickName: postDM.posted_user[0].user.nick_name,
-                            userId: postDM.posted_user[0].user_id,
-                            userImageUrl: postDM.posted_user[0].user.user_img_url,
-                            textProfile: postDM.posted_user[0].user.profile_text
-                        }),
-                )
-            } else {
-                const allPosts = await this.prismaClient.post.findMany({
-                    take: count,
-                    orderBy: {
-                        posted_at: 'desc',
-                    },
-                    where: {
-                        posted_user: {
-                            some: {
-                                user_id: userId
-                            },
-                        },
-                    }, include: {
-                        posted_user: {
-                            include: {
-                                user: true
-                            }
-                        },
-                        _count: {
-                            select: { favos: true, comments: true },
-                        },
-                        favos: {
-                            where: {
-                                user_id: loginUser.user_id
-                            }
-                        }
-                    }
-                })
-
-                return allPosts.map(
-                    (postDM) =>
-                        new PostDTO({
-                            id: postDM.id,
-                            imageUrl: postDM.image_url,
-                            title: postDM.title,
-                            text: postDM.text,
-                            postedAt: postDM.posted_at,
-                            favosCount: postDM._count.favos,
-                            favoStatus: postDM.favos.length,
-                            commentsCount: postDM._count.comments,
-                            lastPostId: allPosts.slice(-1)[0].id,
-                            nickName: postDM.posted_user[0].user.nick_name,
-                            userId: postDM.posted_user[0].user_id,
-                            userImageUrl: postDM.posted_user[0].user.user_img_url,
-                            textProfile: postDM.posted_user[0].user.profile_text
-                        }),
-                )
-            }
+            return allPosts.map(
+                (postDM) =>
+                    new PostDTO({
+                        id: postDM.id,
+                        imageUrl: postDM.image_url,
+                        title: postDM.title,
+                        text: postDM.text,
+                        postedAt: postDM.posted_at,
+                        favosCount: postDM._count.favos,
+                        favoStatus: postDM.favos.length,
+                        commentsCount: postDM._count.comments,
+                        lastPostId: allPosts.slice(-1)[0].id,
+                        nickName: postDM.posted_user[0].user.nick_name,
+                        userId: postDM.posted_user[0].user_id,
+                        userImageUrl: postDM.posted_user[0].user.user_img_url,
+                        textProfile: postDM.posted_user[0].user.profile_text
+                    }),
+            )
         }
     }
 }

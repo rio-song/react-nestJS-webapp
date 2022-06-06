@@ -53,14 +53,12 @@ export class PostController {
     async getUserAllPosts(
         @Body() getAllPostsDto: GetPostsAllRequest,
         @Param() param,
-        @Headers('token') token: string | null,
     ): Promise<GetPostsAllResponse> {
         const prisma = new PrismaClient()
         const qs = new PostQS(prisma)
         const usecase = new GetPostsUserAllUseCase(qs)
         try {
             const result = await usecase.do({
-                _token: token,
                 userId: param.userId,
                 count: getAllPostsDto.count,
                 lastPostId: getAllPostsDto.lastPostId
