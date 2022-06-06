@@ -63,6 +63,5 @@ class User {
         this.email = params.email
         this.registeredAt = params.registeredAt
         this.profileText = params.profileText
-        console.log("中身知りたい" + this.profileText)
     }
 }

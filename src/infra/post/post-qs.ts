@@ -36,7 +36,7 @@ export class PostQS implements IPostQS {
                     }
                 }
             })
-            console.log("Post2")
+
             return allPosts.map(
                 (postDM) =>
                     new PostDTO({

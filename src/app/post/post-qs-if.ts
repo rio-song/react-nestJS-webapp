@@ -29,7 +29,6 @@ export class PostDTO {
         this.userId = userId
         this.userImageUrl = userImageUrl
         this.textProfile = textProfile
-        console.log("favoStatus" + favoStatus)
         if (favoStatus > 0) {
             this.favoStatus = true
         } else if (favoStatus === 0) {
@@ -37,7 +36,6 @@ export class PostDTO {
         } else {
             this.favoStatus = null
         }
-        console.log("favoStatus2" + favoStatus)
         this.commentsCount = commentsCount
         this.lastPostId = lastPostId
         this.nickName = nickName

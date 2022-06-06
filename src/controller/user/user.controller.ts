@@ -86,7 +86,7 @@ export class UserController {
         const prisma = new PrismaClient()
         const userRepo = new UserRepository(prisma)
         const usecase = new PutUserUseCase(userRepo)
-        console.log("ここまできているのか")
+
         try {
             const result = await usecase.do({
                 token: token,

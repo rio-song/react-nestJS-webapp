@@ -16,7 +16,6 @@ export class PutUserUseCase {
         nickName: string; imageUrl: string; profileText: string | null; email: string;
         password: string;
     }) {
-        console.log("ここまできているのか２")
         try {
             if (params.token == null || params.token == undefined || params.token == ""
                 || params.userId == null || params.userId == undefined || params.userId == ""
@@ -30,9 +29,8 @@ export class PutUserUseCase {
             }
             const { token, userId, firstName, familyName, nickName, imageUrl, profileText, email, password,
             } = params
-            console.log("ここまできているのか３")
             const tokenError = await new DomainService().tokenCheck(token);
-            console.log("ここまできているのか4")
+
             if (tokenError === 'tokenError') {
                 return 'tokenError'
             }
@@ -40,13 +38,11 @@ export class PutUserUseCase {
             const userCurrent = await this.userRepo.getUser(userId);
             if (userCurrent.getAllProperties().email != email) {
 
-                console.log("ここまできているのか5")
                 const emailDoubleError = await new DomainService().emailDoubleCheck(email)
                 if (emailDoubleError === 'emailDoubleError') {
                     return 'emailDoubleError'
                 }
             }
-            console.log("ここまできているのか6")
 
             const userEntity = new User({
                 id: userId,
@@ -60,7 +56,6 @@ export class PutUserUseCase {
                 registeredAt: userCurrent.getAllProperties().registeredAt,
                 createdAt: userCurrent.getAllProperties().createdAt
             })
-            console.log("ここまできているのか7")
             await this.userRepo.update(userEntity);
             return
         } catch (error) {
