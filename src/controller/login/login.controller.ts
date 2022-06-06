@@ -27,10 +27,12 @@ export class LoginController {
             return response
         } catch (e) {
             if (e === 'notFoundAccount') {
+                throw new NotFoundException();
+            } else if (e === 'badrequest') {
                 throw new BadRequestException();
+            } else {
+                throw new InternalServerErrorException();
             }
-            throw new InternalServerErrorException();
         }
     }
-
 }

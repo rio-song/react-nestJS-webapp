@@ -17,7 +17,7 @@ export class PostPostUseCase {
                 || params.imageUrl == null || params.imageUrl == undefined || params.imageUrl == ""
                 || params.text == null || params.text == undefined || params.text == ""
                 || params.title == null || params.title == undefined || params.title == "") {
-                const e = new Error('notFoundAccount')
+                const e = new Error('badrequest')
                 return Promise.reject(e.message);
             }
             const {

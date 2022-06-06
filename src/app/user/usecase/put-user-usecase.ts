@@ -1,6 +1,5 @@
 import { User } from 'src/domain/entity/user'
 import { IUserRepository } from 'src/domain/repository-interface/user-repository'
-import { createRandomIdString } from 'src/util/random'
 import { DomainService } from 'src/domain/domain-service/domain-service'
 
 export class PutUserUseCase {
@@ -17,6 +16,7 @@ export class PutUserUseCase {
         nickName: string; imageUrl: string; profileText: string | null; email: string;
         password: string;
     }) {
+        console.log("ここまできているのか２")
         try {
             if (params.token == null || params.token == undefined || params.token == ""
                 || params.userId == null || params.userId == undefined || params.userId == ""
@@ -25,22 +25,31 @@ export class PutUserUseCase {
                 || params.nickName == null || params.nickName == undefined || params.nickName == ""
                 || params.email == null || params.email == undefined || params.email == ""
                 || params.password == null || params.password == undefined || params.password == "") {
-                const e = new Error('notFoundAccount')
+                const e = new Error('badrequest')
                 return Promise.reject(e.message);
             }
-            const { token, firstName, familyName, nickName, imageUrl, profileText, email, password,
+            const { token, userId, firstName, familyName, nickName, imageUrl, profileText, email, password,
             } = params
+            console.log("ここまできているのか３")
             const tokenError = await new DomainService().tokenCheck(token);
+            console.log("ここまできているのか4")
             if (tokenError === 'tokenError') {
                 return 'tokenError'
             }
-            const emailDoubleError = await new DomainService().emailDoubleCheck(email)
-            if (emailDoubleError === 'emailDoubleError') {
-                return 'emailDoubleError'
+
+            const userCurrent = await this.userRepo.getUser(userId);
+            if (userCurrent.getAllProperties().email != email) {
+
+                console.log("ここまできているのか5")
+                const emailDoubleError = await new DomainService().emailDoubleCheck(email)
+                if (emailDoubleError === 'emailDoubleError') {
+                    return 'emailDoubleError'
+                }
             }
+            console.log("ここまできているのか6")
 
             const userEntity = new User({
-                id: createRandomIdString(),
+                id: userId,
                 firstName: firstName,
                 familyName: familyName,
                 nickName: nickName,
@@ -48,11 +57,12 @@ export class PutUserUseCase {
                 profileText: profileText,
                 email: email,
                 password: password,
-                registeredAt: new Date(),
-                createdAt: null
+                registeredAt: userCurrent.getAllProperties().registeredAt,
+                createdAt: userCurrent.getAllProperties().createdAt
             })
-            await this.userRepo.save(userEntity);
-            return userEntity.getAllProperties().id
+            console.log("ここまできているのか7")
+            await this.userRepo.update(userEntity);
+            return
         } catch (error) {
             // memo: エラー処理
             throw error

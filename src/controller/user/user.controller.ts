@@ -9,7 +9,7 @@ import { PutUserRequest } from './request/put-user-request'
 import { PostUserUseCase } from 'src/app/user/usecase/post-user-usecase'
 import { PostUserRequest } from './request/post-user-request'
 import { PostPutUserResponse } from './response/post-put-user-response'
-import { UnauthorizedException, BadRequestException, NotFoundException, InternalServerErrorException } from '../../util/error'
+import { UnauthorizedException, BadRequestException, NotFoundException, InternalServerErrorException, BadRequestEmailException } from '../../util/error'
 
 @Controller({
     path: 'api/user',
@@ -61,7 +61,7 @@ export class UserController {
                 throw new UnauthorizedException();
             }
             if (result === 'emailDoubleError') {
-                throw new BadRequestException();
+                throw new BadRequestEmailException();
             }
             const response = new PostPutUserResponse(result)
             return response
@@ -86,6 +86,7 @@ export class UserController {
         const prisma = new PrismaClient()
         const userRepo = new UserRepository(prisma)
         const usecase = new PutUserUseCase(userRepo)
+        console.log("ここまできているのか")
         try {
             const result = await usecase.do({
                 token: token,
@@ -102,11 +103,11 @@ export class UserController {
                 throw new UnauthorizedException();
             }
             if (result === 'emailDoubleError') {
-                throw new BadRequestException();
+                throw new BadRequestEmailException();
             }
 
             const response = new PostPutUserResponse(result)
-            return response
+            return
         } catch (e) {
             if (e.name === 'UnauthorizedException') {
                 throw new UnauthorizedException();

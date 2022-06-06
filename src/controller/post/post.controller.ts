@@ -43,6 +43,8 @@ export class PostController {
         } catch (e) {
             if (e.name === 'UnauthorizedException') {
                 throw new UnauthorizedException();
+            } else if (e === 'badrequest') {
+                throw new BadRequestException();
             }
             throw new InternalServerErrorException();
         }
@@ -66,6 +68,9 @@ export class PostController {
             const response = new GetPostsAllResponse({ Posts: result })
             return response
         } catch (e) {
+            if (e === 'badrequest') {
+                throw new BadRequestException();
+            }
             throw new InternalServerErrorException();
         }
     }
@@ -92,6 +97,8 @@ export class PostController {
         } catch (e) {
             if (e.name === 'UnauthorizedException') {
                 throw new UnauthorizedException();
+            } else if (e === 'badrequest') {
+                throw new BadRequestException();
             }
             throw new InternalServerErrorException();
         }

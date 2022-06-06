@@ -48,25 +48,30 @@ export class UserRepository implements IUserRepository {
             registeredAt: user.registered_at,
             createdAt: user.created_at,
         })
+        console.log("Userの中身を知りたい" + user.profile_text)
 
+        console.log("エンティティの中身を知りたい" + userEntity.getAllProperties().profileText)
         return userEntity;
     }
 
     public async update(userEntity: User): Promise<User> {
+        console.log("ここまできているのか8")
         const { id, firstName, familyName, nickName, imageUrl, profileText, email, password,
             registeredAt, createdAt } = userEntity.getAllProperties()
 
         await this.prismaClient.$transaction(async (prismaClient) => {
-
-            await this.prismaClient.user.delete({
+            console.log("ここまできているのか9")
+            // await this.prismaClient.user.delete({
+            //     where: {
+            //         id: id
+            //     },
+            // })
+            console.log("ここまできているのか10")
+            await this.prismaClient.user.update({
                 where: {
-                    id: id
-                },
-            })
-
-            await this.prismaClient.user.create({
-                data: {
                     id: id,
+                },
+                data: {
                     first_name: firstName,
                     family_name: familyName,
                     nick_name: nickName,
@@ -79,6 +84,7 @@ export class UserRepository implements IUserRepository {
                     created_at: createdAt,
                 }
             })
+            console.log("ここまできているのか11")
         })
         return userEntity;
     }

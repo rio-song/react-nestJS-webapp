@@ -5,9 +5,9 @@ export class User {
     private familyName: string
     private nickName: string
     private imageUrl: string | null
-    private password: string
-    private email: string
     private profileText: string | null
+    private email: string
+    private password: string
     private registeredAt: Date
     private createdAt: Date | null
 
@@ -23,11 +23,11 @@ export class User {
         this.familyName = familyName
         this.nickName = nickName
         this.imageUrl = imageUrl
+        this.profileText = profileText
         this.email = email
         this.password = password
         this.registeredAt = registeredAt
         this.createdAt = createdAt
-        this.profileText = profileText
     }
 
     public getAllProperties() {

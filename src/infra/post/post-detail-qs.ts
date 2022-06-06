@@ -2,8 +2,8 @@ import { PrismaClient } from '@prisma/client'
 import {
     PostDetailDTO,
     IPostDetailQS,
-    CommentDTO
 } from 'src/app/post/post-detail-qs-if'
+import { CommentDTO } from 'src/app/comment/comment-qs-if'
 
 export class PostDetailQS implements IPostDetailQS {
     private prismaClient: PrismaClient

@@ -15,7 +15,7 @@
 //                 || params.postId == null || params.postId == undefined || params.postId == ""
 //                 || params.commentId == null || params.commentId == undefined || params.commentId == ""
 //                 || params.comment == null || params.comment == undefined || params.comment == "") {
-//                 const e = new Error('notFoundAccount')
+//                 const e = new Error('badrequest')
 //                 return Promise.reject(e.message);
 //             }
 //             const {

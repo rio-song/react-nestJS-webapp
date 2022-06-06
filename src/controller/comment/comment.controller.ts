@@ -1,17 +1,47 @@
-import { Body, Controller, Post, Put, Param, Delete, Headers } from '@nestjs/common'
+import { Body, Controller, Get, Post, Put, Param, Delete, Headers } from '@nestjs/common'
 import { PrismaClient } from '@prisma/client'
 import { PostPutCommentRequest } from './request/post-put-comment-request'
 import { PostCommentUseCase } from 'src/app/comment/usecase/post-comment-usecase'
-//import { PutCommentUseCase } from 'src/app/comment/usecase/put-comment-usecase'
 import { DeletCommentUseCase } from 'src/app/comment/usecase/delete-comment-usecase'
 import { CommentRepository } from 'src/infra/comment/comment-repository'
 import { UnauthorizedException, BadRequestException, NotFoundException, InternalServerErrorException } from '../../util/error'
-
+import { GetCommentsResponse } from './response/get-post-detail-response'
+import { GetCommentUseCase } from 'src/app/comment/usecase/get-comment-usecase'
+import { CommentQS } from 'src/infra/comment/comment-qs'
 
 @Controller({
     path: 'api/comment',
 })
 export class CommentController {
+
+    @Get('/postId/:postId')
+    async getPostDetail(
+        @Param() param,
+        @Headers('token') token: string,
+    ): Promise<GetCommentsResponse> {
+        const prisma = new PrismaClient()
+        const qs = new CommentQS(prisma)
+        const usecase = new GetCommentUseCase(qs)
+        try {
+            const result = await usecase.do({
+                token: token,
+                postId: param.postId,
+            })
+            if (result === 'tokenError') {
+                throw new UnauthorizedException();
+            }
+            const response = new GetCommentsResponse({ Comments: result })
+            return response
+        } catch (e) {
+            if (e.name === 'UnauthorizedException') {
+                throw new UnauthorizedException();
+            } else if (e === 'badrequest') {
+                throw new BadRequestException();
+            }
+            throw new InternalServerErrorException();
+        }
+    }
+
     @Post('/postId/:postId/userId/:userId')
     async postUser(
         @Param('userId') userId: string,
@@ -35,6 +65,8 @@ export class CommentController {
         } catch (e) {
             if (e.name === 'UnauthorizedException') {
                 throw new UnauthorizedException();
+            } else if (e === 'badrequest') {
+                throw new BadRequestException();
             }
             throw new InternalServerErrorException();
         }

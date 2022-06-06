@@ -8,6 +8,11 @@ export class UnauthorizedException extends HttpException {
 }
 export class BadRequestException extends HttpException {
     constructor() {
+        super('入力に誤りがあります。', HttpStatus.BAD_REQUEST);
+    }
+}
+export class BadRequestEmailException extends HttpException {
+    constructor() {
         super('メールアドレスが重複しています。', HttpStatus.BAD_REQUEST);
     }
 }

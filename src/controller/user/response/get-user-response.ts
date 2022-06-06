@@ -13,7 +13,7 @@ export class GetUserResponse {
             nickName: Users.nickName,
             imageUrl: Users.imageUrl,
             email: Users.email,
-            profileText: Users.password,
+            profileText: Users.profileText,
             registeredAt: Users.registeredAt,
         })
     }
@@ -62,5 +62,7 @@ class User {
         this.nickName = params.nickName
         this.email = params.email
         this.registeredAt = params.registeredAt
+        this.profileText = params.profileText
+        console.log("中身知りたい" + this.profileText)
     }
 }

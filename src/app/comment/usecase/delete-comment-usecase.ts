@@ -9,7 +9,11 @@ export class DeletCommentUseCase {
     }
 
     public async do(params: { token: string, commentId: string }) {
-
+        if (params.token == null || params.token == undefined || params.token == ""
+            || params.commentId == null || params.commentId == undefined || params.commentId == "") {
+            const e = new Error('badrequest')
+            return Promise.reject(e.message);
+        }
         const {
             token,
             commentId

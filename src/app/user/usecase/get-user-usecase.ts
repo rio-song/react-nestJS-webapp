@@ -11,7 +11,11 @@ export class GetUserUseCase {
             token,
             userId,
         } = params
-
+        if (params.token == null || params.token == undefined || params.token == ""
+            || params.userId == null || params.userId == undefined || params.userId == "") {
+            const e = new Error('badrequest')
+            return Promise.reject(e.message);
+        }
         try {
             const tokenError = await new DomainService().tokenCheck(token);
             if (tokenError === 'tokenError') {

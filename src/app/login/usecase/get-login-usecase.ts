@@ -11,7 +11,7 @@ export class GetLoginUseCase {
         try {
             if (params.email == null || params.email == undefined || params.email == ""
                 || params.password == null || params.password == undefined || params.password == "") {
-                const e = new Error('notFoundAccount')
+                const e = new Error('badrequest')
                 return Promise.reject(e.message);
             }
 

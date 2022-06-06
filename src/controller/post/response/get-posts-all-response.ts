@@ -89,5 +89,6 @@ class Post {
         this.userId = params.userId
         this.nickName = params.nickName
         this.userImageUrl = params.userImageUrl
+        this.textProfile = params.textProfile
     }
 }

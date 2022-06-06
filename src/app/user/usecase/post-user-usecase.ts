@@ -22,7 +22,7 @@ export class PostUserUseCase {
                 || params.nickName == null || params.nickName == undefined || params.nickName == ""
                 || params.email == null || params.email == undefined || params.email == ""
                 || params.password == null || params.password == undefined || params.password == "") {
-                const e = new Error('notFoundAccount')
+                const e = new Error('badrequest')
                 return Promise.reject(e.message);
             }
             const { firstName, familyName, nickName, imageUrl, email, password,

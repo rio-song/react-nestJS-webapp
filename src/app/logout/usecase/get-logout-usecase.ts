@@ -7,6 +7,10 @@ export class GetLogoutUseCase {
         this.loginRepo = loginRepo
     }
     public async do(token: string) {
+        if (token == null || token == undefined || token == "") {
+            const e = new Error('badrequest')
+            return Promise.reject(e.message);
+        }
         try {
             await this.loginRepo.logout(token);
         } catch (error) {
