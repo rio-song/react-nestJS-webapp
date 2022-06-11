@@ -2,7 +2,8 @@
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
 generator client {
-  provider = "prisma-client-js"
+  provider        = "prisma-client-js"
+  previewFeatures = ["interactiveTransactions"]
 }
 
 datasource db {
@@ -12,47 +13,58 @@ datasource db {
 
 model User {
   id            String       @id
-  firstName     String
-  familyName    String
+  first_name    String
+  family_name   String
+  nick_name     String
+  user_img_url  String
+  profile_text  String
   email         String
   password      String
   registered_at DateTime
   created_at    DateTime     @default(now())
   updated_at    DateTime     @default(now())
-  PostedUser    PostedUser[]
-  Comments      Comments[]
-  Favos         Favos[]
+  posted_user   PostedUser[]
+  comments      Comments[]
+  favos         Favos[]
+  Login         Login[]
+}
+
+model Login {
+  id      String @id
+  token   String
+  user_id String
+  User    User?  @relation(fields: [user_id], references: [id])
 }
 
 model Post {
-  id         String       @id
-  imageUrl   String
-  title      String
-  text       String
-  posted_at  DateTime
-  created_at DateTime     @default(now())
-  updated_at DateTime     @default(now())
-  PostedUser PostedUser[]
-  Comments   Comments[]
-  Favos      Favos[]
+  id          String       @id
+  image_url   String
+  title       String
+  text        String
+  posted_at   DateTime
+  created_at  DateTime     @default(now())
+  updated_at  DateTime     @default(now())
+  posted_user PostedUser[]
+  comments    Comments[]
+  favos       Favos[]
 }
 
 model PostedUser {
   id         String   @id
-  userId     String
-  user       User     @relation(fields: [userId], references: [id])
-  postId     String
-  post       Post     @relation(fields: [postId], references: [id])
+  user_id    String
+  user       User     @relation(fields: [user_id], references: [id])
+  post_id    String
+  post       Post     @relation(fields: [post_id], references: [id])
   created_at DateTime @default(now())
   updated_at DateTime @default(now())
 }
 
 model Comments {
   id           String   @id
-  userId       String
-  user         User     @relation(fields: [userId], references: [id])
-  postId       String
-  post         Post     @relation(fields: [postId], references: [id])
+  user_id      String
+  user         User     @relation(fields: [user_id], references: [id])
+  post_id      String
+  post         Post     @relation(fields: [post_id], references: [id])
   comment      String
   commented_at DateTime
   created_at   DateTime @default(now())
@@ -61,10 +73,10 @@ model Comments {
 
 model Favos {
   id         String   @id
-  userId     String
-  user       User     @relation(fields: [userId], references: [id])
-  postId     String
-  post       Post     @relation(fields: [postId], references: [id])
+  user_id    String
+  user       User     @relation(fields: [user_id], references: [id])
+  post_id    String
+  post       Post     @relation(fields: [post_id], references: [id])
   created_at DateTime @default(now())
   updated_at DateTime @default(now())
 }
