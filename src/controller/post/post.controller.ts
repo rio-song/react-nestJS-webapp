@@ -14,12 +14,19 @@ import { PutPostUseCase } from 'src/app/post/usecase/put-post-usecase'
 import { DeletePostUseCase } from 'src/app/post/usecase/delete-post-usecase'
 import { PostRepository } from 'src/infra/post/post-repository'
 import { UnauthorizedException, BadRequestException, NotFoundException, InternalServerErrorException } from '../../util/error'
+import { ApiTags, ApiResponse } from '@nestjs/swagger'
 
+@ApiTags('投稿機能')
 @Controller({
     path: 'api/post',
 })
 export class PostController {
     @Get('/userId/:userId')
+    @ApiResponse({ status: 200, description: 'Success' })
+    @ApiResponse({ status: 400, description: '入力に誤りがあります。(BadRequest)' })
+    @ApiResponse({ status: 401, description: '認証エラーが発生しました(tokenError)' })
+    @ApiResponse({ status: 500, description: '予期せぬエラーが発生しました。(InternalServerError)' })
+
     async getAllPosts(
         @Body() getAllPostsDto: GetPostsAllRequest,
         @Param() param,
@@ -50,6 +57,10 @@ export class PostController {
         }
     }
     @Get('/user/userId/:userId')
+    @ApiResponse({ status: 200, description: 'Success' })
+    @ApiResponse({ status: 400, description: '入力に誤りがあります。(BadRequest)' })
+    @ApiResponse({ status: 401, description: '認証エラーが発生しました(tokenError)' })
+    @ApiResponse({ status: 500, description: '予期せぬエラーが発生しました。(InternalServerError)' })
     async getUserAllPosts(
         @Body() getAllPostsDto: GetPostsAllRequest,
         @Param() param,
@@ -74,6 +85,10 @@ export class PostController {
     }
 
     @Get('/postId/:postId/userId/:userId')
+    @ApiResponse({ status: 200, description: 'Success' })
+    @ApiResponse({ status: 400, description: '入力に誤りがあります。(BadRequest)' })
+    @ApiResponse({ status: 401, description: '認証エラーが発生しました(tokenError)' })
+    @ApiResponse({ status: 500, description: '予期せぬエラーが発生しました。(InternalServerError)' })
     async getPostDetail(
         @Param() param,
         @Headers('token') token: string,
@@ -104,6 +119,10 @@ export class PostController {
 
 
     @Post('/userId/:userId')
+    @ApiResponse({ status: 201, description: 'Success' })
+    @ApiResponse({ status: 400, description: '入力に誤りがあります。(BadRequest)' })
+    @ApiResponse({ status: 401, description: '認証エラーが発生しました(tokenError)' })
+    @ApiResponse({ status: 500, description: '予期せぬエラーが発生しました。(InternalServerError)' })
     async postUser(
         @Param() userId: string,
         @Body() postUserDto: PostPutUserRequest,
@@ -132,6 +151,10 @@ export class PostController {
     }
 
     @Put('/userId/:userId/postId/:postId')
+    @ApiResponse({ status: 200, description: 'Success' })
+    @ApiResponse({ status: 400, description: '入力に誤りがあります。(BadRequest)' })
+    @ApiResponse({ status: 401, description: '認証エラーが発生しました(tokenError)' })
+    @ApiResponse({ status: 500, description: '予期せぬエラーが発生しました。(InternalServerError)' })
     async putUser(
         @Param('userId') userId: string,
         @Param('postId') postId: string,
@@ -163,6 +186,11 @@ export class PostController {
 
 
     @Delete('/postId/:postId')
+    @ApiResponse({ status: 200, description: 'Success' })
+    @ApiResponse({ status: 400, description: '入力に誤りがあります。(BadRequest)' })
+    @ApiResponse({ status: 401, description: '認証エラーが発生しました(tokenError)' })
+    @ApiResponse({ status: 500, description: '予期せぬエラーが発生しました。(InternalServerError)' })
+
     async deletePost(
         @Param('postId') postId: string,
         @Headers('token') token: string,

@@ -4,13 +4,18 @@ import { PostFavoUseCase } from 'src/app/favo/usecase/post-favo-usecase'
 import { DeleteFavoUseCase } from 'src/app/favo/usecase/delete-favo-usecase'
 import { FavoRepository } from 'src/infra/favo/post-repository'
 import { UnauthorizedException, BadRequestException, NotFoundException, InternalServerErrorException } from '../../util/error'
+import { ApiTags, ApiResponse } from '@nestjs/swagger'
 
-
+@ApiTags('お気に入り機能')
 @Controller({
     path: 'api/favo',
 })
 export class FavoController {
     @Post('/postId/:postId/userId/:userId')
+    @ApiResponse({ status: 201, description: 'Success' })
+    @ApiResponse({ status: 401, description: '認証エラーが発生しました(tokenError)' })
+    @ApiResponse({ status: 500, description: '予期せぬエラーが発生しました。(InternalServerError)' })
+
     async postUser(
         @Param('userId') userId: string,
         @Param('postId') postId: string,
@@ -37,6 +42,9 @@ export class FavoController {
     }
 
     @Delete('/postId/:postId/userId/:userId')
+    @ApiResponse({ status: 200, description: 'Success' })
+    @ApiResponse({ status: 401, description: '認証エラーが発生しました(tokenError)' })
+    @ApiResponse({ status: 500, description: '予期せぬエラーが発生しました。(InternalServerError)' })
     async deletePost(
         @Param('userId') userId: string,
         @Param('postId') postId: string,
