@@ -5,13 +5,19 @@ import { GetLoginRequest } from './request/get-login-request'
 import { GetLoginResponse } from './response/get-login-response'
 import { LoginRepository } from 'src/infra/login/login-repository'
 import { UnauthorizedException, BadRequestException, NotFoundException, InternalServerErrorException } from '../../util/error'
+import { ApiTags, ApiResponse } from '@nestjs/swagger'
 
+@ApiTags('ログイン')
 @Controller({
     path: 'api/login',
 })
 export class LoginController {
 
     @Post()
+    @ApiResponse({ status: 201, description: 'Success' })
+    @ApiResponse({ status: 400, description: '入力に誤りがあります。(BadRequest)' })
+    @ApiResponse({ status: 404, description: 'メールアドレス・パスワードが間違っているか、存在しないアカウントです。(NotFoundAccount)' })
+    @ApiResponse({ status: 500, description: '予期せぬエラーが発生しました。(InternalServerError)' })
     async getLogin(
         @Body() getLoginDto: GetLoginRequest,
     ): Promise<GetLoginResponse> {

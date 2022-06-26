@@ -10,12 +10,19 @@ import { PostUserUseCase } from 'src/app/user/usecase/post-user-usecase'
 import { PostUserRequest } from './request/post-user-request'
 import { PostPutUserResponse } from './response/post-put-user-response'
 import { UnauthorizedException, BadRequestException, NotFoundException, InternalServerErrorException, BadRequestEmailException } from '../../util/error'
+import { ApiTags, ApiResponse } from '@nestjs/swagger'
 
+@ApiTags('ユーザー機能')
 @Controller({
     path: 'api/user',
 })
 export class UserController {
     @Get('/userId/:userId')
+    @ApiResponse({ status: 200, description: 'Success' })
+    @ApiResponse({ status: 400, description: '入力に誤りがあります。(BadRequest)' })
+    @ApiResponse({ status: 401, description: '認証エラーが発生しました(tokenError)' })
+    @ApiResponse({ status: 500, description: '予期せぬエラーが発生しました。(InternalServerError)' })
+
     async getUser(
         @Param() param,
         @Headers('token') token: string,
@@ -42,6 +49,12 @@ export class UserController {
     }
 
     @Post()
+    @ApiResponse({ status: 201, description: 'Success' })
+    @ApiResponse({ status: 400, description: '入力に誤りがあります。(BadRequest)' })
+    @ApiResponse({ status: 400, description: 'メールアドレスが重複しています。(BadRequest)' })
+    @ApiResponse({ status: 401, description: '認証エラーが発生しました(tokenError)' })
+    @ApiResponse({ status: 500, description: '予期せぬエラーが発生しました。(InternalServerError)' })
+
     async postUser(
         @Body() postUserDto: PostUserRequest,
     ): Promise<PostPutUserResponse> {
@@ -78,6 +91,12 @@ export class UserController {
     }
 
     @Put('/userId/:userId')
+    @ApiResponse({ status: 200, description: 'Success' })
+    @ApiResponse({ status: 400, description: '入力に誤りがあります。(BadRequest)' })
+    @ApiResponse({ status: 400, description: 'メールアドレスが重複しています。(BadRequest)' })
+    @ApiResponse({ status: 401, description: '認証エラーが発生しました(tokenError)' })
+    @ApiResponse({ status: 500, description: '予期せぬエラーが発生しました。(InternalServerError)' })
+
     async putUser(
         @Param('userId') userId: string,
         @Headers('token') token: string,
