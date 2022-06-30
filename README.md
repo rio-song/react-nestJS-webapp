@@ -1,12 +1,25 @@
+## 構成
+- Node.js(v18.0.0)
+- フレームワーク：[NestJS](https://nestjs.com/)(v8.1.3)
+- ORM：[prisma](https://www.prisma.io/)(v3.13.3)
+- DB：postgreSQL
 
-## Description
 
-[Nest](https://github.com/nestjs/nest) frameworkを使用して作成
+## APIのIF仕様書(Swagger)
+https://api.rioswebapp.tk/api/
+
+## アプリ全体設計書
+https://www.notion.so/8a50cb6d25c144df92c897d69c057ed6
 
 ## Installation
 
 ```bash
 $ npm install
+```
+prismaのマイグレ
+```bash
+$ npm prisma generate
+$ npm prisma migrate dev --name init --preview-feature
 ```
 
 ## Running the app
@@ -35,6 +48,3 @@ $ npm run test:e2e
 $ npm run test:cov
 ```
 
-
-# APIのIF仕様書
-https://api.rioswebapp.tk/api/
