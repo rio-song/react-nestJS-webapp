@@ -9,7 +9,7 @@
 https://api.rioswebapp.tk/api/
 
 ## アプリ全体設計書
-https://www.notion.so/8a50cb6d25c144df92c897d69c057ed6
+https://poised-tarragon-30b.notion.site/8a50cb6d25c144df92c897d69c057ed6
 
 ## Installation
 
